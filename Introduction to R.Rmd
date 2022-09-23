@@ -1,0 +1,210 @@
+---
+title: "Introduction to R"
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+tutorial:
+  id: "intro-r"
+  version: 0.5
+---
+
+```{r setup, include=FALSE}
+library(MASS)
+library(learnr)
+remotes::install_github("rstudio/gradethis",build = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
+learnr::tutorial_options(exercise.timelimit = 60)
+```
+
+## Introduction to R
+
+In this module, you will learn how to use the programming language, R, to analyze data. While there are many programs we could use, R has a few advantages:
+
+-   FREE (other statistical programs can cost thousands of dollars!)
+-   R is Open source, so we can see the code. This contributes to Open Science (which is a good thing)
+-   It also means that researchers contribute coding packages, so it's easy to calculate many types of statistics and know exactly what you're doing
+-   Nice and sophisticated graphs
+-   Easy to reuse code (save time) and share (transparency in research)
+
+### R-Studio
+
+RStudio is the most commonly used integrated development environment (IDE) for R. In other words, it is the most common way that people use to interact with R and write R code. In fact, you probably used RStudio and had to run some code in order to access this tutorial. We won't work within the RStudio environment for these tutorials directly, but it's worth getting to know it a little bit.
+
+### Four Windows
+
+![Figure 1: The RStudio environment](rstudio.jpg){#id .class width="900" height="445px"}
+
+-   **Top Left**: R Markdown File: This is where you will answer questions and write code for R assignments. Anything you write in this Top Left window will save when you exit out of R
+-   **Bottom Left**: Console: This is a little like scrap paper. You can use this to try to answer questions or to write code, but anything written in this area will **NOT** save. This means we won't be able to grade anything written in this section!
+-   **Top Right**: Environment (and some other things): The top right section will be blank for now, but any variable you make or any data set you upload will be saved here.
+-   **Bottom Right**: Everything else: There are several tabs you can open in this section. If you make graphs, you will be able to see them here(on the "Plots" Tab. Additionally, the "Help" tab will give you more information about the functions we will use in R
+
+### Running Code
+
+How do we get R to give us answers to our codes? We need to tell it to "run" our code. We can do this by using the "Run" button. We can also run code by putting our cursor on the line we want to run and pressing "Command(Mac)/Control(PC)" and "Return/Enter".
+
+Try running the following calculation examples
+
+```{r, echo = TRUE}
+# Addition
+5+2
+# Subtraction
+10-4
+# Multiplication
+4*7
+# Division
+125/5
+```
+
+*Note: The `#` symbol is a way of "commenting" your code.It is like putting a little description on what you are doing in those lines. Anything after the `#` symbol in R won't be run and will be ignored. You can use it to describe what is going within the code.*
+
+Try doing some arithmetic on your own in the box below. You can run the code by clicking on the blue "Run Code" button at the top right of the box below.
+
+```{r code_sandbox, exercise=TRUE, exercise.cap="Arithmetic"}
+```
+
+## Functions
+
+### 
+
+Much of what you do in R will involve using **functions**. Let's take a look at a simple function.
+
+```{r, echo=TRUE}
+print('Hello')
+```
+
+Here, we are calling a function called `print`. This function takes in one argument, or input: `'Hello'`. The arguments go inside parentheses, and provide the input values. The function then takes that input and performs some sort of action. In this case, as you might have guessed, the `print` function prints out whatever is provided as input.
+
+Try writing some code yourself to print out a message of your choice. Note that the text you want to print out has to be in quotes, though it doesn't matter whether it's double quotes (`"`) or single quotes (`'`).
+
+```{r printing_practice, exercise=TRUE, exercise.cap="Print"}
+```
+
+### Data Types
+
+As mentioned above, the text we wanted to print has to be in quotation marks. This is because we want to create what is called a **string** object. In R, it is also called a **character** object. These are objects that represents **words**, as opposed to **numeric** objects which represent **numbers**. Essentially, the quotation marks tell R to treat whatever is inside as a **character value**.
+
+```{r function}
+learnr::question("Which of these is the correct way to call the `print` function to print the words 'some text here'?",
+         answer("print 'some text here'", correct=FALSE),
+         answer("print('some text here')", correct = TRUE,  message = "Good job!"),
+         answer("print(some text here)",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+Let's look at a different function.
+
+```{r, echo = TRUE}
+sum(1,2)
+```
+
+This function, `sum`, takes in two arguments. As you might be able to deduce, `sum` takes the sum of the two numbers. Notice that we could have just as easily used `1+2` instead of using the `sum` function. Though it didn't make a difference here, there are cases when we might prefer to use the `sum` function. For example, when you want to take the sum of a lot of numbers, it might be easier to use sum than having to type out a lot of `+` symbols.
+
+## Objects
+
+### 
+
+When working in R, we very often use something called **objects**. Objects are simply a way of storing values of any sort, by assigning a value to a name. For example, we can store a value of `2` in the object `x` using the less than symbol (`<`) and dash (`-`) to create an arrow. This assigns the value of 2 to `x`, so that we can access it and use it without needing to use `2`.
+
+```{r, echo = TRUE}
+x <- 2
+x
+```
+
+This can be very useful if we don't want to keep writing the same thing over and over again. It's less useful for individual numbers such as `2`, but we can, for example, use objects to store **vectors** as well.
+
+### Vectors
+
+**Vectors** are at type of object in R that contain multiple values. The colon notation is useful for generating vectors for a range of numbers.
+
+```{r, echo = TRUE}
+# This creates a vector from 1 to 10.
+y <- 1:10
+y
+```
+
+We can also create vectors with whatever values we want using the `c` function.
+
+```{r, echo = TRUE}
+numeric_vector <- c(1,2,6,8,10)
+numeric_vector
+text_vector <- c('this', 'is', 'some', 'text')
+```
+
+Here, `numeric_vector` has 5 elements, which are `1`, `2`, `6`, `8`, and `10`, and `text_vector` has four elements, which are the character objects, `'this'`, `'is'`, `'some'`, and `'text'`.
+
+**Vectors** are actually quite useful in R, because you can do lots of operations very quickly. For example, if we wanted to find out what the result of multiplying each number from 1 to 10 by 7 was, we would be able to do so using the following:
+
+```{r, echo = TRUE}
+y <- 1:10
+y * 7
+```
+
+If we wanted to find the sum of all of those numbers, we can use the `sum` function as we did before, except with just the vector this time. We'll create another object `z` that contains the values from 1 to 10 multiplied by 7, then find the sum.
+
+```{r, echo = TRUE}
+y <- 1:10
+z <- y * 7
+sum(z)
+```
+
+### Using the Right Objects
+
+Recall that when we found the sum of two numbers using `sum(1,2)`, we used `1` and `2` without quotation marks. This is because we wanted to add up **numeric** values rather than **character** values (because it doesn't make sense to add characters together). Suppose we tried to run the following.
+
+```{r, echo = TRUE, eval = FALSE}
+sum('1','2')
+```
+
+We would get an error! This is because R is trying to add characters, which doesn't make sense. Remember, when programming, we need to be **very precise** in what we write, because computers are very bad at interpreting what we want.
+
+### Class
+
+One useful for function when you get an error is the `class` function. This tells you what type of object something is.
+
+```{r, echo = TRUE}
+test_value <- '1'
+class(test_value)
+```
+
+This can help us identify if there are issues with what we're trying to do. For example, if we try to sum up some values, but we get an error, we can use `class` to see if the values we are trying to add up are actually numeric rather than characters.
+
+## Additional R Tools
+
+### Packages
+
+Many times, we want to use functions that other people have created and made available. We can do this easily using packages. To use them, though, you need to first install the package. Most of the packages that you'll want to use are available through the Comprehensive R Archive Network (CRAN). To get a package from CRAN, you can use the `install.packages` function.
+
+```{r, echo=TRUE, eval=FALSE}
+# An example package is ggplot2
+install.packages('ggplot2')
+```
+
+To load in a package that you have already installed, you can use the `library` function.
+
+```{r, echo=TRUE, eval = FALSE}
+library('ggplot2')
+```
+
+One of the biggest strengths about R is the availability of so many different tools through these packages, so it's good to keep in mind when you're working with R in the future.
+
+### Working with Data
+
+Generally, you won't use R to just do arithmetic (although you can certainly use it a calculator that way if you'd like!). More often, you'll actually use it to load datasets and perform analyses on them. Generally, data are brought into R as data frames. You can learn more about data frames in the `data-frames` tutorial, so for now, we'll simply go over how you might bring in data.
+
+For the purposes of these tutorials, we'll generally be using the `data` function.
+
+```{r, echo=TRUE}
+data("Boston")
+```
+
+This loads a dataset that was included in a package already. If you want to bring in your own dataset, you'll need to load it in. This can be done from a variety of different formats, such as Excel files, but the easiest is to use a CSV, or comma-separated value file. To do this, you'll have to make sure your working directory is in the same folder as your data file by going to Session \> Set Working Directory \> Choose Directory in RStudio, then navigating to that folder. Then, you can use the `read.csv` function.
+
+```{r, echo = TRUE, eval=FALSE}
+read.csv('Boston')
+```
+
+For these tutorials, we have already pre-loaded data sets for you, so you won't need to read in any data using `read.csv`, but make sure you keep this in mind in case you want to use R for your own data!
