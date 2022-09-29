@@ -35,7 +35,7 @@ RStudio is the most commonly used integrated development environment (IDE) for R
 
 ### Four Windows
 
-![Figure 1: The RStudio environment](D:/BSOS_R_Tutorial/rstudio.jpg){#id .class width=900 height=445px}
+![Figure 1: The RStudio environment](D:/BSOS_R_Tutorial/rstudio.jpg)
 
 -   **Top Left**: R Markdown File: This is where you will answer questions and write code for R assignments. Anything you write in this Top Left window will save when you exit out of R
 -   **Bottom Left**: Console: This is a little like scrap paper. You can use this to try to answer questions or to write code, but anything written in this area will **NOT** save. This means we won't be able to grade anything written in this section!
