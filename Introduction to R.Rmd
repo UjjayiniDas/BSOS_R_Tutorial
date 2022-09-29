@@ -12,9 +12,11 @@ tutorial:
 ```{r setup, include=FALSE}
 library(MASS)
 library(learnr)
-remotes::install_github("rstudio/gradethis",build = FALSE)
+library(gradethis)
 knitr::opts_chunk$set(echo = FALSE)
-learnr::tutorial_options(exercise.timelimit = 60)
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+learnr::tutorial_options(
+  exercise.timelimit = 60)
 ```
 
 ## Introduction to R
@@ -33,7 +35,7 @@ RStudio is the most commonly used integrated development environment (IDE) for R
 
 ### Four Windows
 
-![Figure 1: The RStudio environment](rstudio.jpg){#id .class width="900" height="445px"}
+![Figure 1: The RStudio environment](D:/BSOS_R_Tutorial/rstudio.jpg){#id .class width=900 height=445px}
 
 -   **Top Left**: R Markdown File: This is where you will answer questions and write code for R assignments. Anything you write in this Top Left window will save when you exit out of R
 -   **Bottom Left**: Console: This is a little like scrap paper. You can use this to try to answer questions or to write code, but anything written in this area will **NOT** save. This means we won't be able to grade anything written in this section!
@@ -208,3 +210,66 @@ read.csv('Boston')
 ```
 
 For these tutorials, we have already pre-loaded data sets for you, so you won't need to read in any data using `read.csv`, but make sure you keep this in mind in case you want to use R for your own data!
+
+## Exercises 
+
+### Exercise 1
+
+Use R to find the value of $2 * (18 + 5 * 2)^2$.
+
+```{r exercise1, exercise = TRUE}
+```
+
+```{r exercise1-check}
+grade_result(
+  pass_if(~ identical(.result, 2 * (18 + 5 * 2)^2), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+### Exercise 2
+
+What is the sum of all even numbers between 2 and 100, inclusive?
+
+```{r exercise2, exercise = TRUE}
+```
+
+<div id="exercise2-hint">
+**Hint:** How would you get a vector of all even numbers between 2 and 100? How would you sum them up?
+</div>
+
+
+```{r exercise2-check}
+grade_result(
+  pass_if(~ identical(.result, sum(2*(1:50))), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+### Exercise 3
+
+Create a new object (you can call it anything you want) containing the string, `I've completed the tutorial!`. Then, use the object's name to display what is inside (don't use `print`).
+
+```{r exercise3, exercise = TRUE}
+```
+
+```{r exercise3-check}
+grade_result(
+  pass_if(~ identical(.result, "I've completed the tutorial!"), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+### Submitting work
+
+```{r submission-setup}
+submission_code <- function(UID){
+  httr::sha1_hash('intror',as.character(UID))
+}
+```
+
+Generate your submission code by putting in your UID as a numeric value in the function below. For example, if your UID is `2`, then your code should look like `submission_code(UID = 2)`
+```{r submission, exercise = TRUE}
+# Replace the number below with your UID
+submission_code(2)
+```
