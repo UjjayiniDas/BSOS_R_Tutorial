@@ -27,3 +27,221 @@ In R, the datasets that you will work with will mainly be in **data frames**. Da
 data("mtcars")
 head(mtcars)
 ```
+
+Unlike an Excel spreadsheet, though, we don't have the full data open in front of us while we work on it in R. Instead, we store them inside **objects**, and use that object to get descriptive statistics, create graphs, and perform inference and hypothesis tests.
+
+In this tutorial, we will explore a variety of different functions for working with data frames to explore and analyze data. The first step of analyzing any data set in R is getting familiar with it, so these functions are crucial to anything you do within R.
+
+This tutorial covers the following:
+
+* Displaying data and accessing elements of the data.
+
+* Subsetting data to get the portion that we want to work with.
+
+## Displaying Data
+
+If we want to look at the structure of a data frame, we can use `str()`. The data about cars that we mentioned earlier is in a data frame object called `mtcars`. Let's take a look at what variables are in the data frame.
+
+```{r structure, echo = TRUE, exercise = TRUE}
+str(mtcars)
+```
+
+This can help you determine types of variables, but be careful! Just because a variable has numbers doesn't mean it's a numerical variable!
+
+### Checking the Size
+
+We can check the number of rows and columns with the following commands:
+
+```{r, echo = TRUE}
+nrow(mtcars) # this is for the number of rows
+ncol(mtcars) # this is for the number of columns
+dim(mtcars) # this is for the dimensions (rows, columns)
+```
+
+### Accessing Values in a Data Frame 
+
+Many times, we don't actually want to look at the entire dataset, usually because it's quite large and we can't get any useful information out of it. However, we might still want to look at few rows, or observations, to get an idea of what it looks like. We can do this using the `head` function.
+
+```{r}
+head(mtcars)
+```
+
+The `head` function prints out the first few rows of the dataset. This is often used along with `str` to get a quick look at the data. It gives you an idea of what columns there are, as well as an example of the types of values those variables can take. A similar function `tail` prints the last few rows of the dataset.
+
+```{r}
+tail(mtcars)
+```
+
+If we want to access individual values or specific rows and columns in the data frame, we can do this using square brackets. 
+
+```{r, echo = TRUE}
+mtcars[2,3] # this gets the third variable of the second observation
+```
+
+### **Practice Question**
+
+Suppose we wanted to look at the horsepower of the first car in the data frame? How would we do this?
+
+```{r accessing_values, exercise = TRUE}
+```
+
+```{r accessing_values-check}
+grade_result(
+  pass_if(~ identical(.result, mtcars[1,'hp']), "Good job!"),
+  fail_if(~ TRUE, "Not quite. Try again.")
+)
+```
+
+### Accessing Columns
+
+To look at individual columns, we can either leave the rows section blank or we can use "`$`" notation. Note that these are vectors in R.
+
+```{r, echo = TRUE}
+# All of these do the same thing
+mtcars$mpg
+mtcars[,1]
+mtcars[,"mpg"]
+```
+
+### Accessing Multiple Columns
+
+If you want to look at multiple columns, we can do that by including a vector of numbers (representing column number) or a vector of column names. We can look at multiple rows by including a vector of rows, representing row numbers, as well.
+
+```{r, echo = TRUE}
+mtcars[1:10, 2:4] # For columns 2 to 4
+mtcars[1:10, c("cyl","disp","hp")] # This does the same thing
+```
+## Creating Subsets of the Data
+
+Many times, especially with larger datasets, you'll want to only look at certain portions of the data. We can subset our dataset by indicating which rows we want. We do this using a vector of boolean values with `TRUE` whenever it's a row that we want and `FALSE` whenever it's a row we don't want. This vector should have a length equal to the number of rows in the data frame. To get this vector, we can just use a logical operator. For example, consider the following code, which looks at the `vs` variable, which is 0 if the car doesn't have a v-shaped engine, and 1 if it does have a v-shaped engine.
+
+```{r, echo = TRUE}
+mtcars$vs == 0 
+```
+
+This evaluates every element of the `mtcars$vs` vector and returns a vector of the same length with `TRUE` and `FALSE` values. We can then use this vector to subset the dataset so that we only have the rows with `TRUE` values.
+
+```{r, echo = TRUE}
+notvshaped <- mtcars[mtcars$vs == 0,]
+head(notvshaped)
+```
+
+The new object we've created, `notvshaped`, is a data frame that contains only the rows from `mtcars` with a value of 0 in `vs`. We can also use other logical operators to create different subsets. 
+
+```{r, echo = TRUE}
+# What do you think this subset is?
+example_subset <- mtcars[mtcars$vs  == 0 & mtcars$mpg < 20,]
+head(example_subset)
+```
+
+```{r subset1}
+learnr::question("What is the subset being taken?",
+         answer("Only cars that either do not have a V-shaped engine or have less than 20 mpg.", correct=FALSE),
+         answer("Only cars that both do not a V-shaped engine and have less than 20mpg.", correct = TRUE,  message = "Good job!"),
+         answer("Only cars that either do not have a V-shaped engine or have less than 20 mpg, but not both.",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+The following table shows a list of some logical operators you might find useful.
+
+|Operator|Meaning|
+|---|---|---|---|
+|>|greater than|
+| >= | greater than or equal to |
+|<|less than|
+| <= | less than or equal to |
+| == | equal to |
+| != | not equal to |
+| & | and |
+| \| | or |
+
+## Exercises
+
+### Exercise 1
+
+Consider the `iris` data that is included in the `MASS` package. 
+
+```{r exercises-setup}
+data("iris")
+```
+
+```{r exercise1-structure, echo = TRUE, exercise = TRUE}
+str(iris)
+```
+
+How many variables are there in this dataset?
+
+```{r exercise1}
+learnr::question("How many variables are there in this dataset?",
+         answer("4", correct=FALSE),
+         answer("5", correct = TRUE,  message = "Good job!"),
+         answer("6",  correct = FALSE),
+         answer("2",  correct = FALSE),
+         answer("90",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+### Exercise 2
+
+How would you look at the top few rows of this dataset?
+
+```{r exercise2, echo = TRUE, exercise = TRUE}
+```
+
+```{r exercise2-check}
+grade_result(
+  pass_if(~ identical(.result, head(iris)), "Good job!"),
+  fail_if(~ !is.data.frame(.result), "Oops, looks like you aren't outputing a data frame."),
+  fail_if(~ nrow(.result) > 6, "We want to look at a few rows, not that many."),  
+  fail_if(~ identical(.result, iris[1:nrow(.result),]), "This is technically correct, but try doing it using head to see the top 6 rows."),
+  fail_if(~ TRUE, "Not quite.")
+)
+```
+
+### Exercise 3
+
+How would you subset the dataset to only flowers from the species **virginica**? 
+
+```{r exercise3, echo = TRUE, exercise = TRUE}
+```
+
+```{r exercise3-check}
+grade_result(
+  pass_if(~ identical(.result, iris[iris$Species == "virginica",]), "Good job!"),
+  fail_if(~ TRUE, "Not quite.")
+)
+```
+
+
+### Exercise 4
+
+How would you subset the dataset to only include the flowers with petal length more than 2 but petal width less than 2? 
+
+```{r exercise4, echo = TRUE, exercise = TRUE}
+```
+
+```{r exercise4-check}
+grade_result(
+  pass_if(~ identical(.result, iris[iris$Petal.Length >2 & iris$Petal.Width < 2 ,]), "Good job!"),
+  fail_if(~ TRUE, "Not quite.")
+)
+```
+
+### Submitting work
+
+```{r submission-setup}
+submission_code <- function(UID){
+  httr::sha1_hash('dataframes1',as.character(UID))
+}
+```
+
+Generate your submission code by putting in your UID in the function below. For example, if your UID is `2`, then your code should look like `submission_code(UID = 2)`
+```{r submission, exercise = TRUE}
+# Replace the number below with your UID
+submission_code(2)
+```
+
