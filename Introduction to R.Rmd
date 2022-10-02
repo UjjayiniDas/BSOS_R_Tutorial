@@ -40,7 +40,7 @@ RStudio is the most commonly used integrated development environment (IDE) for R
 -   **Top Left**: R Markdown File: This is where you will answer questions and write code for R assignments. Anything you write in this Top Left window will save when you exit out of R
 -   **Bottom Left**: Console: This is a little like scrap paper. You can use this to try to answer questions or to write code, but anything written in this area will **NOT** save. This means we won't be able to grade anything written in this section!
 -   **Top Right**: Environment (and some other things): The top right section will be blank for now, but any variable you make or any data set you upload will be saved here.
--   **Bottom Right**: Everything else: There are several tabs you can open in this section. If you make graphs, you will be able to see them here(on the "Plots" Tab. Additionally, the "Help" tab will give you more information about the functions we will use in R
+-   **Bottom Right**: Everything else: There are several tabs you can open in this section. If you make graphs, you will be able to see them here(on the "Plots" Tab. Additionally, the "Help" tab will give you more information about the functions we will use in R. 
 
 ### Running Code
 
@@ -56,7 +56,7 @@ Try running the following calculation examples
 # Multiplication
 4*7
 # Division
-125/5
+105/5
 ```
 
 *Note: The `#` symbol is a way of "commenting" your code.It is like putting a little description on what you are doing in those lines. Anything after the `#` symbol in R won't be run and will be ignored. You can use it to describe what is going within the code.*
