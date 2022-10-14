@@ -26,7 +26,7 @@ learnr::tutorial_options(exercise.timelimit = 60)
 One of the first steps that you might take once you have some data in R is to look at descriptive statistics. Remember, the types of descriptive statistics that you use will be different depending on whether it is categorical or numerical data. We will look at numerical descriptive statistics and graphs here; check out the video tutorial in order to learn about how to do descriptive statistics and graphs for categorical data.
 ![categorical descriptives](https://www.youtube.com/watch?v=z4l1Ff97gHo&t=38s)
 
-### Example Dataset: Boston
+### Example Dataset: Iris
 
 In the examples for this tutorial, we will use the \texttt{iris} dataset provided in \texttt{MASS} package in R. 
 
