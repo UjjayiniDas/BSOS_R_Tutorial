@@ -1,0 +1,190 @@
+---
+title: "Correlation and Regression"
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+tutorial:
+  id: "regression"
+  version: 0.5
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(gradethis)
+library(datasets)
+library(ggplot2)
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+knitr::opts_chunk$set(echo = FALSE)
+learnr::tutorial_options(
+  exercise.timelimit = 60)
+```
+
+## Introduction
+
+### 
+
+One of the most common uses for R is investigating relationships between numerical variables and running regression models. The way that R handles running models can be a bit different from other statistical software might do it. In R, we create a **model object**, which contains the executed model, then use the `summary` function to access the relevant information from the model we just ran. This means it typically takes a line of code to run a model and then a separate line of code to see the results, so make sure to pay close attention to how we get the information we need.
+
+In this tutorial, we will examine the relationship between `Fertility` (standardized fertility measure) and `Education` (proportion of persons having education beyond primary school) as well as the relationship between `Fertility` and `Infant Mortality` in 47 French-speaking provinces in Switzerland. The dataset we are using can be found in the `datasets` library of R under the name `swiss`.Here is a glimpse of what the data looks like.
+
+```{r}
+data(swiss)
+head(swiss)
+```
+
+You can find the details of the dataset [here](https://stat.ethz.ch/R-manual/R-patched/library/datasets/html/swiss.html).
+
+Okay, so let's get started!
+
+## Correlation
+
+### Scatterplots
+
+Let's start by looking at some scatterplots to look at relationships visually.
+
+```{r, echo=TRUE}
+qplot(Education, Fertility, data = swiss, main = "Scatterplot of Fertility and Education")
+```
+
+## Basic Interpretations
+
+Now that we have the scatterplot, what information can we retrieve from it?
+
+Looking at the scatterplot of `Education` and `Fertility`, you can notice an overall decreasing pattern in the points. It means, for all the French- speaking provinces, fertility measures are decreasing when the proportion of people having education beyond primary level increases. 
+
+```{r, echo=TRUE}
+qplot(Infant.Mortality, Fertility, data = swiss, main = "Scatterplot of Fertility and Infant Mortality")
+```
+
+**How about interpreting the `Infant Mortality` vs `Fertility` scatterplot?**
+
+```{r function}
+learnr::question("Which of these is the correct way to describe the relationship between 'Fertility' and 'Infant Mortality'?",
+         answer("As infant mortality increases, fertility measure decreases", correct=FALSE),
+         answer("As infant mortality increases, fertility measure increases as well", correct = TRUE,  message = "Good job!"),
+         answer("Can not be determined from the plot",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+
+### Finding correlations
+
+You can use the same function to find both Spearman's Rho rank correlation and Pearson's correlation. The `cor` function is used for both, and you simply specify the method as an argument in the function. The first two arguments are the variables you want to find the correlation for, while the third is the type of correlation that you want to find. For the uninitiated, here are some quick reads on both `Pearson's Correlation Coefficient` and `Spearman's Rho`:
+[Peason's Correlation Coefficient](https://www.statisticshowto.com/probability-and-statistics/correlation-coefficient-formula/)
+
+
+[Spearman's Rho](https://www.statisticshowto.com/probability-and-statistics/correlation-coefficient-formula/spearman-rank-correlation-definition-calculate/)
+
+**Spearman's Rho**
+
+```{r}
+cor(swiss$Education,swiss$Fertility,method = 'spearman')
+```
+
+**Pearson Correlation**
+
+```{r}
+cor(swiss$Infant.Mortality,swiss$Fertility, method = 'pearson')
+```
+
+* Note: Here you might find `Spearman's Rho` to be not very appropriate to investigate correlation, but our purpose was just to show you how to get that using R, which is served!
+
+## Regression
+
+###
+Before starting the module, if you need a review on the concepts of regression, feel free to watch the video. ![Linear Regression](https://www.youtube.com/watch?v=i032e6OGzUA)
+
+We'll start by looking at the relationship between fertility measures and the proportion of people having education beyond primary level.
+
+Let's fit a least squares regression line to this using the `lm` function. To do this, you'll have to use **formula notation** for the first argument. The formula notation is simply the form:
+ 
+$$[\text{outcome}] \sim [\text{predictor}]$$
+so you specify the outcome variable, then put in a `~`, then put in your predictor variable. The last argument is the `data` argument, specifying the data frame so that we can use the variable names by themselves within the formula. 
+
+The `lm` function outputs an `lm` object. In order to get the results of running the model that we want, such as the coefficients, the associated p-values, R-squared values, and so on, we need to use `summary` on the model object. 
+ 
+```{r, echo= TRUE}
+mod1 <- lm(Fertility ~ Education, data = swiss)
+summary(mod1)
+```
+
+### Regression Diagnostics
+
+To get regression diagnostic plots, we can simply use `plot` on the model object. The first two plots show the residuals. The first one is the residual plot, which you should check to make sure there is no pattern and that there is constant variance. The second is a QQ-plot checking the normality of the residuals. The next two are used to check for outliers and influential points.
+
+```{r, echo = TRUE}
+plot(mod1)
+```
+
+## Multiple Regression
+
+In order to do multiple regression, we can simply add additional variables to the righthand side of the tilde (`~`). We can do this using `+` and `*`. If you use `+`, this simply adds another variable, whereas using `*` include all interaction terms for variables included in the `*` operation. 
+
+Let's take a look at model to predict fertility measures using proportion of people having education beyond primary level and infant mortality, including an interaction term.
+
+```{r multmodel, echo=TRUE}
+mod2 <- lm(Fertility ~ Education * Infant.Mortality, data = swiss)
+summary(mod2)
+```
+
+## Exercises
+
+### Exercise 1
+
+How would you find a linear regression model using measures on fertility as the outcome and infant mortality as the predictor? Output the summary of the model (using `summary`).
+
+
+```{r exercise1, exercise=TRUE}
+```
+
+```{r exercise1-check}
+grade_result(
+  pass_if(~ identical(.result, summary(lm(Fertility ~ Infant.Mortality, data = swiss))), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+### Exercise 2
+
+```{r exercise2-question}
+learnr::question("Based on the output of the model from Exercise 1, what is the coefficient for infant mortality (the slope of the regression line)?",
+         answer("1.7865", correct = TRUE,  message = "Good job!"),
+         answer("34.5155", correct = FALSE),
+         answer("0.00359",  correct = FALSE),
+         answer("3.074",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+### Exercise 3
+
+How would you find a linear regression model using fertility measures as the outcome and two predictor variables: proportion of people having education beyond primary level and proportion of Catholics, including an interaction term? Output the summary of the model (using `summary`).
+
+
+```{r exercise3, exercise=TRUE}
+```
+
+```{r exercise3-check}
+grade_result(
+  pass_if(~ identical(.result, summary(lm(Fertility ~ Education*Catholic, data = swiss))), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+### Submitting work
+
+```{r submission-setup}
+submission_code <- function(UID){
+  httr::sha1_hash('regression121',as.character(UID))
+}
+```
+
+Generate your submission code by putting in your UID in the function below. For example, if your UID is `2`, then your code should look like `submission_code(UID = 2)`
+```{r submission, exercise = TRUE}
+# Replace the number below with your UID
+submission_code(2)
+```
