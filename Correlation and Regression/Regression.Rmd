@@ -14,6 +14,7 @@ library(learnr)
 library(gradethis)
 library(datasets)
 library(ggplot2)
+library(testthat)
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 knitr::opts_chunk$set(echo = FALSE)
 learnr::tutorial_options(
@@ -134,7 +135,7 @@ summary(mod2)
 
 ### Exercise 1
 
-How would you find a linear regression model using measures on fertility as the outcome and infant mortality as the predictor? Output the summary of the model (using `summary`).
+How would you find a linear regression model using measures on fertility as the outcome and infant mortality as the predictor? Write down the code necessary below.
 
 
 ```{r exercise1, exercise=TRUE}
@@ -142,7 +143,7 @@ How would you find a linear regression model using measures on fertility as the 
 
 ```{r exercise1-check}
 grade_this({
-  pass_if(setequal(.result, lm(Fertility ~ Infant.Mortality, data = swiss)), "Good Job!")
+  pass_if(setequal(.result,lm(Fertility ~ Infant.Mortality, data = swiss)), "Good Job!")
   fail()
 })
 ```
@@ -162,17 +163,16 @@ learnr::question("Based on the output of the model from Exercise 1, what is the 
 
 ### Exercise 3
 
-How would you find a linear regression model using fertility measures as the outcome and two predictor variables: proportion of people having education beyond primary level and proportion of Catholics, including an interaction term? Output the summary of the model (using `summary`).
-
+How would you find a linear regression model using fertility measures as the outcome and two predictor variables: proportion of people having education beyond primary level and proportion of Catholics, including an interaction term? 
 
 ```{r exercise3, exercise=TRUE}
 ```
 
 ```{r exercise3-check}
-grade_result(
-  pass_if(~ identical(.result, summary(lm(Fertility ~ Education*Catholic, data = swiss))), "Good Job!"),
-  fail_if(~ TRUE)
-)
+grade_this({
+  pass_if(setequal(.result,lm(Fertility ~ Education*Catholic, data = swiss)), "Good Job!")
+  fail()
+})
 ```
 
 ### Submitting work
