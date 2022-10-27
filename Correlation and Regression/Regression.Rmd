@@ -141,10 +141,10 @@ How would you find a linear regression model using measures on fertility as the 
 ```
 
 ```{r exercise1-check}
-grade_result(
-  pass_if(~ identical(.result, summary(lm(Fertility ~ Infant.Mortality, data = swiss))), "Good Job!"),
-  fail_if(~ TRUE)
-)
+grade_this({
+  pass_if(setequal(.result, lm(Fertility ~ Infant.Mortality, data = swiss)), "Good Job!")
+  fail()
+})
 ```
 
 ### Exercise 2
