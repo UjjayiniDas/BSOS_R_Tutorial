@@ -1,0 +1,198 @@
+---
+title: "T-tests"
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+tutorial:
+  id: "t-tests"
+  version: 0.5
+---
+
+
+```{r setup, include=FALSE}
+library(learnr)
+library(gradethis)
+library(faraway)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+learnr::tutorial_options(
+  exercise.timelimit = 60)
+```
+
+## Hypothesis Tests
+
+One of the basic inferential analyses you can do with data is a hypothesis test. R is very helpful for performing t-tests, with built-in functions allowing you run a variety of different types of tests, including one sample and two sample tests, with ease.
+
+
+We will be using the `teengamb` dataset from package `faraway` in this tutorial to look at how to use R to do some basic t-tests.The `teengamb` data frame has 47 rows and 5 columns. A survey was conducted to study teenage gambling in Britain. For documentation of the dataset, refer to the [link](https://www.rdocumentation.org/packages/faraway/versions/1.0.8/topics/teengamb).
+
+Let's have a look at the dataset quickly before moving on.
+
+```{r}
+data(teengamb)
+head(teengamb)
+```
+
+### 
+
+As a reminder, the steps to a hypothesis are:
+
+1) State your hypotheses.
+
+2) Set the criterion.
+
+3) Collect sample data.
+
+4) Calculate the test statistic.
+
+5) Evaluate and interpret.
+
+Most of these steps will be done outside of R, and in fact, they can generally only be done outside of R. However, R can be very useful for the computational part, step 4. We won't go over every single step here and focus mostly on the R part, so remember to keep in mind that the code is only one small portion of the hypothesis testing process.
+
+
+## Hypothesis Test Setup
+
+Suppose an official from the Government is trying to prepare a report on how much teenagers use on gambling per year in order to develop some public policy measure. He writes in the report that the average expenditure for teenage gambling is 7 pounds a year. Assuming that the 47 teenagers in the `teeengamb` dataset are an independent and random sample, how might the official test whether his claim was correct(that is, the mean is 10)?
+
+The hypotheses would look like this.
+
+$$H_0: \mu = 7 $$
+$$H_1: \mu \ne 7$$
+In the examples in this tutorial, we will use an alpha level of 0.05. In general, the R code won't change depending on the alpha level that you decide, though the code will change if you want different confidence levels for confidence intervals.
+
+## Using `t.test()`
+
+We can do the t-test by hand by calculating the test statistic and finding the critical value, but `R` also has a convenient way of doing it using just the data with the `t.test` function. You do need to make sure you still go through all of the steps of performing a hypothesis test though --  the `t.test()` function will perform the test for you, but you need to make sure to provide all of the appropriate arguments.
+
+Let's look at doing a simple two-sided test, with a null hypothesis that $\mu = 100$. We provide the vector of data points, as well as an argument providing the null value. In this case, since the value is in pounds, we use `mu = 7`. Always keep in mind the unit in which the variable is reported while setting the value for the null hypothesis.
+
+```{r, echo = TRUE}
+t.test(teengamb$gamble, mu = 7)
+```
+
+The output provides the test statistic, degrees of freedom, and the p-value in the top line. In this case, our p-value was 0.01029, so we would reject the null hypothesis (remember, our alpha level was 0.05). Below, we get a few more pieces of information, such as the actual sample mean.
+
+###
+
+By default, this does a two-sided test. What if we wanted to do a one-sided test? We can use the `alternative` argument to change it.
+
+```{r, echo = TRUE}
+# These are how to do one-sided tests.
+# Note: This is just to show that it's possible! Don't 
+# change the sidedness after the fact like this!
+t.test(teengamb$gamble, mu = 7, alternative = "greater")
+t.test(teengamb$gamble, mu = 7, alternative = "less")
+```
+
+Note that this doesn't provide the conclusion of the test for you. You need to make the correct conclusion from these results. Basically, you just need to take the p-value and compare it to the alpha level like before. 
+
+Lastly, notice that the output gives you information about the confidence interval. You can use the `t.test()` function to create confidence intervals as well. Just make sure you use the `conf.level` argument to specify the type of confidence interval you want.
+
+```{r, echo = TRUE}
+t.test(teengamb$gamble, conf.level = 0.99)
+```
+
+If you're just making a confidence interval, you can ignore the rest of the information. Here, I ran `t.test()` without anything for `mu` -- this gave me a test comparing it to 0, but I don't need that information since all I need is the confidence interval. 
+
+## Two Sample t-tests
+
+### Independent Samples t-test
+
+Doing an independent samples t-test can be done one of two ways. If you have the data from the two samples in two vectors, you can simply use those vectors to run the t-test. In a data frame, this would mean that the two samples are stored as two separate columns. 
+
+If we wanted to run a t-test to see if there was as significant difference between socioeconomic status score i.e. `status` and verbal score i.e. `verbal`, then we could use the following code.
+
+```{r, echo = TRUE}
+t.test(teengamb$status,teengamb$verbal)
+```
+
+
+###
+
+What if the data were stored in a way such that all the values were in one column, with the corresponding groups in another column? That is, for example, what if we wanted to do an independent samples t-test for gambling expenditure of teenagers based on their gender?
+
+We can use formula notation in this case.
+
+```{r, echo = TRUE}
+t.test(gamble ~ sex, data = teengamb)
+```
+
+On the left of the tilde (`~`), we have the numerical variable that we want to use the mean of. On the right side, we put the categorical variable that denotes which person is in which group (i.e. male or female). The `data = teengamb` argument, as before, denotes which data to pull these columns from. 
+
+### Paired t-test
+
+Above, we used an independent sample t-test to look at the difference between socioeconomic and verbal scores. This isn't quite how we should approach this, though. Remember, each teenager was assigned both the scores, so this is actually a paired t-test, since the scores on each variable (socioeconomic status, verbal ability) are paired according to which teenagers got them. We can do a paired t-test by adding an argument `paired = TRUE` to the `t.test` function.
+
+```{r, echo = TRUE}
+t.test(teengamb$status, teengamb$verbal, paired = TRUE)
+```
+
+
+## Exercises
+
+### Exercise 1
+
+The official who was preparing the report earlier mentioned income of the teenagers as a potential factor behind their level of expenditure on gambling. He thinks that the average income of the gambling teenagers is below 5 pounds per week. He wants to check if his claim is true or not. Is the mean income per week signficantly smaller than 5? Use an alpha level of 0.05 and perform the test using R.
+
+```{r exercise1, echo = TRUE, exercise = TRUE}
+```
+
+```{r exercise1-check}
+grade_result(
+  pass_if(~ identical(.result, t.test(teengamb$income, mu = 5, alternative = 'less')), "Good job!"),
+  fail_if(~ TRUE, "Not quite. Try again.")
+)
+```
+
+
+### Exercise 2
+
+```{r exercise2}
+learnr::question("What would be the conclusion from the hypothesis test in Exercise 1?",
+         answer("Reject the null hypothesis.", correct=FALSE),
+         answer("Fail to reject the null hypothesis.", correct = TRUE,  message = "Good job!"),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+### Exercise 3
+
+Suppose you are interested in whether there is a relationship between the gender and the score on socio-economic status. That is, in words, your null hypothesis is that the mean `status` score for males is the same as the mean `status` score for females. Your alternative hypothesis is that they are not the same. Use an alpha level of 0.05 and perform the test using R.
+
+```{r exercise3, echo = TRUE, exercise = TRUE}
+```
+
+
+```{r exercise3-check}
+grade_result(
+  pass_if(~ identical(.result, t.test(status ~ sex, data = teengamb)), "Good job!"),
+  fail_if(~ TRUE, "Not quite. Try again.")
+)
+```
+
+### Exercise 4
+
+```{r exercise4}
+learnr::question("What would be the conclusion from the hypothesis test in Exercise 3?",
+         answer("Fail to reject the null hypothesis.", correct=FALSE),
+         answer("Reject the null hypothesis.", correct = TRUE,  message = "Good job!"),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+### Submitting work
+
+```{r submission-setup}
+submission_code <- function(UID){
+  httr::sha1_hash('ttest123',as.character(UID))
+}
+```
+
+Generate your submission code by putting in your UID in the function below. For example, if your UID is `2`, then your code should look like `submission_code(UID = 2)`
+```{r submission, exercise = TRUE}
+# Replace the number below with your UID
+submission_code(2)
+```
