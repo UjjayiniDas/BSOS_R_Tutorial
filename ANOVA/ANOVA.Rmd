@@ -1,0 +1,279 @@
+---
+title: "ANOVA"
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+tutorial:
+  id: "anova"
+  version: 0.5
+---
+
+
+```{r setup, include=FALSE}
+library(learnr)
+library(boot)
+library(gradethis)
+library(ggplot2)
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+knitr::opts_chunk$set(echo = FALSE)
+learnr::tutorial_options(
+  exercise.timelimit = 60)
+```
+
+## ANOVA
+
+As with t-tests, R is very useful for running ANOVA with large datasets. Computing values such as sum of squares and finding the F-value can be quite cumbersome, but the `aov` function in R makes all of that easy to do. It takes a bit more work to interpret and get other values such as $\eta^2$, but all of that can be done in R still. 
+
+In this tutorial, we will use the `poisons` dataset from package `boot`. The dataset contains 48 rows and 3 columns. The data form a 3x4 factorial experiment, the factors being three poisons and four treatments. Each combination of the two factors was used for four animals, the allocation to animals having been completely randomized. The details about the dataset can be found [here.](https://r-data.pmagunia.com/dataset/r-dataset-package-boot-poisons)
+
+As a starter, here is what the structure of the `crabs` data looks like.
+```{r,echo=TRUE}
+data("poisons")
+head(poisons)
+```
+
+Our goal here is to examine the relationship between `time` of survival of the guniea pigs with two categorical variables `poison` i.e. type of poison used to the animals and `treat` i.e. type of treatment given to them.
+
+## ANOVA in R
+
+###
+
+Suppose we are interested in seeing if there is a relationship between the type of poison given to the guinea pigs (1, 2, 3) and their survival times. Since the type of poison has more than two levels, it wouldn't be appropriate to use a t-test in this case. Using ANOVA would allow us to see if there were any differences across the different types of poison.So, our objective is to test the following assumption:
+
+* $H_0$: There is no difference in survival time average between group based on the type of poison used.
+
+against,
+
+* $H_1$: The survival time average is different for at least one of the poison group.
+
+Just to get an idea of what the relationships look like before we run the ANOVA, let's take a look at some side-by-side boxplots.
+
+```{r,echo=TRUE}
+qplot(x = factor(poison), y = time, data = poisons, geom = 'boxplot')
+```
+
+```{r practice-1}
+learnr::question("Based on the boxplots, what do you think which assumption seems more valid?
+?",
+         answer("$H_1$", correct = TRUE,  message = "Good job!"),
+         answer("$H_0$", correct = FALSE),
+         answer("Can not have an idea from the plot",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+Now, let's investigate this relationship in with the help of ANOVA.
+
+### Using `aov`
+
+You can use the `aov` function to run ANOVA in R. The first argument uses the formula notation, with the "outcome" variable going on the lefthand side of a tilde (`~`) and the "predictor" going on the righthand side. Recall that we had to use the `factor` function in order to make sure R knows to treat a variable as categorical. The second argument is used to specify the data frame that we are pulling the data from. Here, we are going to be using the `poisons` data frame, and using the `time` and `poison` columns.
+
+The `aov` function outputs an `aov` object, which represents the ANOVA being run with the data. In order to see the result of the analysis, we need to use `summary` on this `aov` object.
+
+```{r,echo=TRUE}
+poison_anova <- aov(time ~ factor(poison), data=poisons)
+summary(poison_anova)
+```
+
+Note that this is the same sort of syntax used for running a linear model using `lm`, which is discussed in the `regression` tutorial. 
+
+### ANOVA output
+
+The output from the `summary` function gives a lot of information about the ANOVA that was run. It essentially gives you everything you need to run the test, such as degrees of freedom and sum of squares. It also gives you the final F statistic under `F value` and the p-value under `Pr(>F)`. The asterisks next to the p-value correspond to different alpha levels, which you can interpret using the last line of output. That is, if there are three stars next to the p-value, then it means the p-value is between 0 and 0.001. This helps you see quickly whether the result is significant or not.
+
+```{r practice-2}
+learnr::question("Based on the summary now, what do you think which assumption seems more valid?
+?",
+         answer("$H_1$", correct = TRUE,  message = "Good job!"),
+         answer("$H_0$", correct = FALSE),
+         answer("Indecisive result",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+### Pairwise Comparison
+
+Note that, the ANOVA test does not inform us which group has a different mean. To identify the group(s), we can perform a test called **Tukey's Pairwise Comparison**. This test uses pairwise post-hoc testing to determine whether there is a difference between the mean of all possible pairs using a studentized range distribution. This method tests every possible pair of all groups. Those who are interested, can check out this [link](https://online.stat.psu.edu/stat502_fa21/lesson/2/2.3) for detailed description!
+
+But, good news is, we don't need to worry about performing the calculations by our own in case the pairwise comparison comes up. R will do it for us using `TukeYHSD()` function.
+
+```{r, echo=TRUE}
+TukeyHSD(poison_anova)
+```
+
+From the output table you can see, we have got quite a few things! The columns `diff`,`lwr`,`upr` and `p adj` show the difference in means for different groups, the lower and upper boundaries for those differences and the adjusted p-values for the differences due to the presence of multiple groups, respectively.
+
+```{r practice-3}
+learnr::question("Based on the output of Tukey test, what do you think which group(s) is/are significantly different in mean than the others?
+)?",
+         answer("Groups having poison 3", correct = TRUE,  message = "Good job!"),
+         answer("Groups having poison 2", correct = FALSE),
+         answer("Groups having poison 1",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+
+
+### Finding Effect Size ($\eta_2$)
+
+The output doesn't explicitly give you $\eta^2$ values, but you can actually compute it quite easily based on the provided output. Recall that the eta squared is found using 
+
+$$\eta^2 = \frac{SS_{effect}}{SS_{total}}$$
+So, we can find this using some simple arithmetic.
+
+```{r,echo=TRUE}
+1.033/(1.033+1.972)
+```
+
+So, the $\eta^2$ suggests that the type of poison has a large effect on the survival times of the Guinea pigs.
+
+
+
+## Factorial ANOVA
+
+### 
+Factorial analysis of variance (ANOVA) is a statistical procedure that allows researchers to explore the influence of two or more independent variables (factors) on a single dependent variable.
+
+Suppose, we are now interested to know if there is any statistical difference between the survival times of the guinea pigs based on both the type of poison they had and the type of treatment they got.
+
+To do factorial ANOVA, we use the `aov()` function with a formula to define the variables as we did before, except this time, we simply add additional variables. Here, we will include both `poison` and `treat`. We use a `+` to include the variables here, which assumes that the variables are independent. Just like with using `lm` to run linear models, you can use a `*` to include an interaction term as well.
+
+```{r, echo=TRUE}
+poison_anova2 <- aov(time ~ factor(poison) + factor(treat), data=poisons)
+summary(poison_anova2)
+```
+
+The output should look similar to a one-way ANOVA, except with additional variables.
+
+### 
+
+```{r factorial}
+learnr::question("Fill in the blanks: The p-values for type of poison and type of treatments are ____ and ____, respectively.",
+         answer("5.7e-07, 6.7e-06", correct = TRUE,  message = "Good job!"),
+         answer("1.0330, 0.9212",  correct = FALSE),
+         answer("0.5165, 0.3071",  correct = FALSE),
+         answer("20.64, 12.27",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+## Exercises
+
+For exercises, let's consider a data set called `Comprehension.Data` that consists of reading comprehension score (1-20), age of the participants (2 levels: young and old) and reading platform (3 levels : Paper, Kindle and Computer) for 60 participants.
+
+```{r echo=FALSE}
+set.seed(4234) 
+
+N.2=10 #sample size of age 
+N.3=20 #sample size of reading platform
+
+Comprehension.Data <- data.frame( 
+ subject = seq(1,N.3*3), 
+ platform = c(rep("Paper", N.3), rep("Kindle", N.3), rep("Computer", N.3)), 
+ age = rep(c(rep("Old",N.2), rep("Young", N.2)),3), 
+ score = c(rnorm(N.2,10,.5),rnorm(N.2,8,.5), 
+                    rnorm(N.2,6,.5),rnorm(N.2,7,.5),
+                    rnorm(N.2,2,.5),rnorm(N.2,6,.5))) 
+```
+
+You can check how the data looks like or the basic summaries by running the following lines of codes.
+
+
+```{r echo=TRUE}
+head(Comprehension.Data)
+summary(Comprehension.Data)
+```
+
+### Exercise 1
+
+How would you run an ANOVA to determine whether there is a relationship between age and the comprehension scores? Run the model and output the summary.
+
+```{r exercise1, exercise=TRUE}
+```
+
+```{r exercise1-check}
+grade_result(
+  pass_if(~ identical(.result, summary(aov( score~ factor(age), data = Comprehension.Data))), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+### Exercise 2
+
+What is the $\eta^2$ value for `age` in the ANOVA you ran in Exercise 1?
+
+```{r exercise2, exercise=TRUE}
+```
+
+```{r exercise2-check}
+grade_result(
+  pass_if(~ identical(.result, 10.1/(10.1+388.4)), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+
+### Exercise 3
+
+Note that `age` has two categories. What if you had decided to simply run a two-sided independent samples t-test for the difference in mean comprehension score between the old and the young group? Complete the code and run the t-test below, which includes an argument `var.equal = TRUE` to include an equal variances assumptions (recall that ANOVA has an equal variances assumption).
+
+```{r exercise3, exercise=TRUE}
+# Uncomment the below code by removing the "#" and complete it.
+# t.test( ~ , data = Comprehension.Data, var.equal = TRUE)
+```
+
+```{r exercise3-question}
+learnr::question("Looking at the p-values, how do they compare?",
+         answer("The t-test p-value is lower.", correct=FALSE),
+         answer("They are the same up to a rounding error.", correct = TRUE,  message = "Good job!"),
+         answer("The t-test p-value is higher.",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+### Exercise 4
+
+How would you run an ANOVA to determine whether there is a difference between the comprehension scores based on both age and reading platform ? Run the model considering the interaction of the two independent variables and output the summary.
+
+```{r exercise4, exercise=TRUE}
+```
+
+```{r exercise4-check}
+grade_result(
+  pass_if(~ identical(.result, summary(aov( score~ factor(age) * factor(platform), data=Comprehension.Data))), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+### Exercise 5
+
+```{r exercise5-question}
+learnr::question("Looking at the p-values from the last ANOVA model you ran, what is your conclusion about the effect of  interaction on the comprehension scores?",
+         answer("The interaction between age and platform is insignificant.", correct=FALSE),
+         answer("The interaction between age and platform is significant.", correct = TRUE,  message = "Good job!"),
+         answer("The p-values do not inform on the decision.",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+### Submitting work
+
+```{r submission-setup}
+submission_code <- function(UID){
+  httr::sha1_hash('anova31',as.character(UID))
+}
+```
+
+Generate your submission code by putting in your UID in the function below. For example, if your UID is `2`, then your code should look like `submission_code(UID = 2)`
+```{r submission, exercise = TRUE}
+# Replace the number below with your UID
+submission_code(2)
+```
