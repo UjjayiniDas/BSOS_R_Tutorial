@@ -28,7 +28,7 @@ One of the first steps that you might take once you have some data in R is to lo
 
 ### Example Dataset: Iris
 
-In the examples for this tutorial, we will use the \texttt{iris} dataset provided in \texttt{MASS} package in R. 
+In the examples for this tutorial, we will use the `iris` dataset provided in `datasets` package in R.
 
 
 ```{r}
@@ -105,7 +105,7 @@ Now, suppose we want to use the `relative frequency` of the flowers to plot the 
 hist(iris$Sepal.Length,probability = TRUE)
 ```
 
-We can redefine the names of the axes, or even the name of the plot using some specific arguments like `xlab`, `ylab` and `main`. But the names should be provided as a `string` i.e. to be careful to put "" around the names! For example,
+We can redefine the names of the axes, or even the name of the plot using some specific arguments like `xlab`, `ylab` and `main`. But the names should be provided as a `string` i.e. be careful to put "" around the names! For example,
 
 ```{r}
 hist(iris$Sepal.Length, breaks = 10, probability = TRUE, xlab = "Sepal Length",ylab = "Relative Frequency", main ="Histogram of Iris Data")
@@ -115,7 +115,7 @@ You can play around with the function `hist()` to discover utilities of differen
 
 ### Boxplots
 
-We can make boxplots using the `boxplots` function.
+We can make boxplots using the `boxplot` function.
 
 ```{r}
 boxplot(iris$Sepal.Length)
@@ -125,7 +125,7 @@ Similar to the case of `hist()` function, we can add a title here too. Why not t
 
 ### Practice Problems
 
-Create a boxplot of `petal length` of the iris flowers and add a title **Boxplot of Petal Length** to the plot.
+Create a boxplot of `Petal.Length` of the iris flowers and add a title **Boxplot of Petal Length** to the plot.
 Submit the required code below.
 
 ```{r practice2, exercise = TRUE}
@@ -174,7 +174,7 @@ qplot(Sepal.Length, data = iris, bins = 10)
 
 ### 
 
-This made a histogram, exactly like we might have wanted. If we wanted a boxplot instead, we can add an additional argument to specify this. Note that we specify `y=` because we want to plot the graph on the y-axis. The `qplot` function for boxplots only works for putting the continuous variable on the y-axis -- in the categorical-descriptives analysis , we can have side-by-side boxplots which can show the distributions by group in a categorical variable, and we'll have to specify `x=` there. For now, just remember to specify `y=` when using `qplot` for boxplots. 
+This made a histogram, exactly like we might have wanted. If we wanted a boxplot instead, we can add an additional argument to specify this. Note that we specify `y=` because we want to plot the graph on the y-axis. The `qplot` function for boxplots only works for putting the continuous variable on the y-axis -- in the categorical-descriptives analysis, we can have side-by-side boxplots which can show the distributions by group in a categorical variable, and we'll have to specify `x=` there. For now, just remember to specify `y=` when using `qplot` for boxplots.
 
 ```{r, echo = TRUE}
 qplot(y = Sepal.Length, data = iris, geom = 'boxplot')
@@ -198,7 +198,7 @@ qplot(Sepal.Length, Sepal.Width, data = iris, main = "Scatterplot of sepal lengt
 
 ## Exercises
 
-Consider the `mtcars` dataset in package `MASS`.
+Consider the `mtcars` dataset in package `datasets`.
 
 ```{r}
 data(mtcars)
