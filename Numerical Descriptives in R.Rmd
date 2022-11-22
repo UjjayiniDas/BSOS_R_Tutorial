@@ -13,6 +13,7 @@ tutorial:
 library(ggplot2)
 library(learnr)
 library(gradethis)
+library(datasets)
 data(mtcars)
 data("iris")
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
