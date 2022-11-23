@@ -109,8 +109,41 @@ The `lm` function outputs an `lm` object. In order to get the results of running
  
 ```{r, echo= TRUE}
 mod1 <- lm(Fertility ~ Education, data = swiss)
-summary(mod1)
+summary_mod1 <- summary(mod1)
+summary_mod1
 ```
+
+**How to extract different results from the summary of a model object?**
+
+To have a look into what information is in there inside the summary, you can run `names()` function with the summary object as input. Then extraction of the required information is same as the way we learnt to subset data frames using `$`. Below are a few examples of what you can do with the summary!
+
+```{r echo=TRUE}
+names(summary_mod1)
+
+## Extracting the estimates of regression coefficients as well as the corresponding standard error, p-values
+
+summary_mod1$coefficients ## gives a table with all information on the coefficients
+
+summary_mod1$coefficients[[2]] ## gives the estimate of Education variable for this model
+
+summary_mod1$coefficients[[4]] ## gives the standard error for estimate of Education
+
+
+## Extracting adjusted R-Square
+
+summary_mod1$adj.r.squared
+
+## Extracting Residual Standard Deviation
+
+summary_mod1$sigma
+```
+
+Feel free to play around with the summary by your own!
+
+```{r code_sandbox, exercise=TRUE, exercise.cap="Exploring Summary"}
+```
+
+
 
 ### Regression Diagnostics
 
