@@ -27,7 +27,7 @@ As with t-tests, R is very useful for running ANOVA with large datasets. Computi
 
 In this tutorial, we will use the `poisons` dataset from package `boot`. The dataset contains 48 rows and 3 columns. The data form a 3x4 factorial experiment, the factors being three poisons and four treatments. Each combination of the two factors was used for four animals, the allocation to animals having been completely randomized. The details about the dataset can be found [here.](https://r-data.pmagunia.com/dataset/r-dataset-package-boot-poisons)
 
-As a starter, here is what the structure of the `crabs` data looks like.
+As a starter, here is what the structure of the `poisons` data looks like.
 ```{r,echo=TRUE}
 data("poisons")
 head(poisons)
@@ -49,8 +49,8 @@ against,
 
 Just to get an idea of what the relationships look like before we run the ANOVA, let's take a look at some side-by-side boxplots.
 
-```{r,echo=TRUE}
-qplot(x = factor(poison), y = time, data = poisons, geom = 'boxplot')
+```{r,echo=TRUE, warning=FALSE}
+qplot(x = factor(poison), y = time, main = "Boxplot of Survival Times based on Poisons", data = poisons, geom = 'boxplot')
 ```
 
 ```{r practice-1}
@@ -64,7 +64,7 @@ learnr::question("Based on the boxplots, what do you think which assumption seem
 )
 ```
 
-Now, let's investigate this relationship in with the help of ANOVA.
+Now, let's investigate this relationship with the help of ANOVA.
 
 ### Using `aov`
 
@@ -81,7 +81,7 @@ Note that this is the same sort of syntax used for running a linear model using 
 
 ### ANOVA output
 
-The output from the `summary` function gives a lot of information about the ANOVA that was run. It essentially gives you everything you need to run the test, such as degrees of freedom and sum of squares. It also gives you the final F statistic under `F value` and the p-value under `Pr(>F)`. The asterisks next to the p-value correspond to different alpha levels, which you can interpret using the last line of output. That is, if there are three stars next to the p-value, then it means the p-value is between 0 and 0.001. This helps you see quickly whether the result is significant or not.
+The output from the `summary` function gives a lot of information about the ANOVA that was run. It essentially gives you everything you need to run the test, such as degrees of freedom and sum of squares. It also gives you the final F statistic under `F value` and the p-value under `Pr(>F)`. The asterisks next to the p-value correspond to different alpha levels, which you can interpret using the last line of output. That is, if there are three stars next to the p-value, then it means the p-value is between 0 and 0.001. This helps you see quickly whether the result is significant or not.For example, if you prefer your level of significance to be 5%, then the factor is significant if the corresponding p-value is less than 0.05. 
 
 ```{r practice-2}
 learnr::question("Based on the summary now, what do you think which assumption seems more valid?
@@ -98,13 +98,19 @@ learnr::question("Based on the summary now, what do you think which assumption s
 
 Note that, the ANOVA test does not inform us which group has a different mean. To identify the group(s), we can perform a test called **Tukey's Pairwise Comparison**. This test uses pairwise post-hoc testing to determine whether there is a difference between the mean of all possible pairs using a studentized range distribution. This method tests every possible pair of all groups. Those who are interested, can check out this [link](https://online.stat.psu.edu/stat502_fa21/lesson/2/2.3) for detailed description!
 
-But, good news is, we don't need to worry about performing the calculations by our own in case the pairwise comparison comes up. R will do it for us using `TukeYHSD()` function.
+But, good news is, we don't need to worry about performing the calculations by our own in case the pairwise comparison comes up. R will do it for us using `TukeyHSD()` function.
 
 ```{r, echo=TRUE}
 TukeyHSD(poison_anova)
 ```
 
-From the output table you can see, we have got quite a few things! The columns `diff`,`lwr`,`upr` and `p adj` show the difference in means for different groups, the lower and upper boundaries for those differences and the adjusted p-values for the differences due to the presence of multiple groups, respectively.
+From the output table you can see, we have got quite a few things! The columns `diff`,`lwr`,`upr` and `p adj` show the difference in means for different groups, the lower and upper boundaries for those differences and the adjusted p-values for the differences due to the presence of multiple groups, respectively. 
+
+**How to interpret the results?**
+
+The interpretation for `TukeyHSD` test can be done looking at the p-values of the different combinations of the levels of the factor of interest. Here it is the `poison`. Let's try to interpret the significance at a 5% level. As you can see, the adjusted p-value for the difference in `2-1` (i.e. difference of poison type 1 and 2)(`p adj = 0.588`) is way higher than 0.05, which leads us to the conclusion that these two types of poisons have no different effect on the survival times of the animals. A similar observation of adjusted p-values can tell you that the poison type 1 and 3, and poison type 2 and 3, however are significantly different in their effects on survival times.
+
+Now, observe the intervals (`[lwr - upr]`) given by `TukeyHSD` test for each of those differences. For the `2-1` case, we got an interval that contains 0, where as for the other two differences (`3-1` and `3-2`), we don't have 0 contained in the intervals. This is another indication of examining the significance of the differences, i.e. if the confidence interval for a particular estimate of any variable (here, difference in poison types) contains 0 in it, that variable might be an insignificant one to explain the variation in the outcome (here, survival time).
 
 ```{r practice-3}
 learnr::question("Based on the output of Tukey test, what do you think which group(s) is/are significantly different in mean than the others?
