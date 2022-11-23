@@ -35,7 +35,7 @@ RStudio is the most commonly used integrated development environment (IDE) for R
 
 ### Four Windows
 
-![Figure 1: The RStudio environment](D:/BSOS_R_Tutorial/rstudio.jpg)
+![Figure 1: The RStudio environment](./images/rstudio.jpg){#id .class width=700 height=445px}
 
 -   **Top Left**: R Markdown File: This is where you will answer questions and write code for R assignments. Anything you write in this Top Left window will save when you exit out of R
 -   **Bottom Left**: Console: This is a little like scrap paper. You can use this to try to answer questions or to write code, but anything written in this area will **NOT** save. This means we won't be able to grade anything written in this section!
@@ -204,6 +204,8 @@ data("Boston")
 ```
 
 This loads a dataset that was included in a package already. If you want to bring in your own dataset, you'll need to load it in. This can be done from a variety of different formats, such as Excel files, but the easiest is to use a CSV, or comma-separated value file. To do this, you'll have to make sure your working directory is in the same folder as your data file by going to Session \> Set Working Directory \> Choose Directory in RStudio, then navigating to that folder. Then, you can use the `read.csv` function.
+
+An equivalent alternative for the above purpose can be to run `setwd()` with specifying the working directory path as a character string inside the function. To check what your current working directory is you can run `getwd()` with no argument. 
 
 ```{r, echo = TRUE, eval=FALSE}
 read.csv('Boston')
