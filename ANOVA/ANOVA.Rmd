@@ -15,6 +15,7 @@ library(learnr)
 library(boot)
 library(gradethis)
 library(ggplot2)
+library(datasets)
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 knitr::opts_chunk$set(echo = FALSE)
 learnr::tutorial_options(
@@ -171,55 +172,42 @@ learnr::question("Fill in the blanks: The p-values for type of poison and type o
 
 ## Exercises
 
-For exercises, let's consider a data set called `Comprehension.Data` that consists of reading comprehension score (1-20), age of the participants (2 levels: young and old) and reading platform (3 levels : Paper, Kindle and Computer) for 60 participants.
+For exercises, let's consider a data set called `warpbreaks` in `datasets` package that consists of the number of warp breaks per loom, where a loom corresponds to a fixed length of yarn.
+For more details, visit the following link:
+[Warpbreaks](https://rdrr.io/r/datasets/warpbreaks.html).
 
-```{r echo=FALSE}
-set.seed(4234) 
-
-N.2=10 #sample size of age 
-N.3=20 #sample size of reading platform
-
-Comprehension.Data <- data.frame( 
- subject = seq(1,N.3*3), 
- platform = c(rep("Paper", N.3), rep("Kindle", N.3), rep("Computer", N.3)), 
- age = rep(c(rep("Old",N.2), rep("Young", N.2)),3), 
- score = c(rnorm(N.2,10,.5),rnorm(N.2,8,.5), 
-                    rnorm(N.2,6,.5),rnorm(N.2,7,.5),
-                    rnorm(N.2,2,.5),rnorm(N.2,6,.5))) 
-```
-
-You can check how the data looks like or the basic summaries by running the following lines of codes.
-
+Let's load the dataset and take a look at it.
 
 ```{r echo=TRUE}
-head(Comprehension.Data)
-summary(Comprehension.Data)
+data("warpbreaks")
+head(warpbreaks)
 ```
+
 
 ### Exercise 1
 
-How would you run an ANOVA to determine whether there is a relationship between age and the comprehension scores? Run the model and output the summary.
+How would you run an ANOVA to determine whether there is a relationship between the number of breaks i.e. `breaks` and the type of `wool` used? Run the model and output the summary.
 
 ```{r exercise1, exercise=TRUE}
 ```
 
 ```{r exercise1-check}
 grade_result(
-  pass_if(~ identical(.result, summary(aov( score~ factor(age), data = Comprehension.Data))), "Good Job!"),
+  pass_if(~ identical(.result, summary(aov( breaks~wool, data = warpbreaks))), "Good Job!"),
   fail_if(~ TRUE)
 )
 ```
 
 ### Exercise 2
 
-What is the $\eta^2$ value for `age` in the ANOVA you ran in Exercise 1?
+What is the $\eta^2$ value for `wool` in the ANOVA you ran in Exercise 1?
 
 ```{r exercise2, exercise=TRUE}
 ```
 
 ```{r exercise2-check}
 grade_result(
-  pass_if(~ identical(.result, 10.1/(10.1+388.4)), "Good Job!"),
+  pass_if(~ identical(.result, 451/(451+8782)), "Good Job!"),
   fail_if(~ TRUE)
 )
 ```
@@ -227,11 +215,11 @@ grade_result(
 
 ### Exercise 3
 
-Note that `age` has two categories. What if you had decided to simply run a two-sided independent samples t-test for the difference in mean comprehension score between the old and the young group? Complete the code and run the t-test below, which includes an argument `var.equal = TRUE` to include an equal variances assumptions (recall that ANOVA has an equal variances assumption).
+Note that `wool` has two categories. What if you had decided to simply run a two-sided independent samples t-test for the difference in mean length of `breaks` between type A and type B wool? Complete the code and run the t-test below, which includes an argument `var.equal = TRUE` to include an equal variances assumptions (recall that ANOVA has an equal variances assumption).
 
 ```{r exercise3, exercise=TRUE}
 # Uncomment the below code by removing the "#" and complete it.
-# t.test( ~ , data = Comprehension.Data, var.equal = TRUE)
+# t.test( breaks~wool , data = warpbreaks, var.equal = TRUE)
 ```
 
 ```{r exercise3-question}
@@ -246,14 +234,14 @@ learnr::question("Looking at the p-values, how do they compare?",
 
 ### Exercise 4
 
-How would you run an ANOVA to determine whether there is a difference between the comprehension scores based on both age and reading platform ? Run the model considering the interaction of the two independent variables and output the summary.
+How would you run an ANOVA to determine whether there is a difference between the length of `breaks` based on both the typw of `wool` used and the level of `tension` applied ? Run the model considering the interaction of the two independent variables and output the summary.
 
 ```{r exercise4, exercise=TRUE}
 ```
 
 ```{r exercise4-check}
 grade_result(
-  pass_if(~ identical(.result, summary(aov( score~ factor(age) * factor(platform), data=Comprehension.Data))), "Good Job!"),
+  pass_if(~ identical(.result, summary(aov( breaks~tension * wool, data=warpbreaks))), "Good Job!"),
   fail_if(~ TRUE)
 )
 ```
