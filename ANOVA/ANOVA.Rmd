@@ -193,7 +193,7 @@ How would you run an ANOVA to determine whether there is a relationship between 
 
 ```{r exercise1-check}
 grade_result(
-  pass_if(~ identical(.result, summary(aov( breaks~wool, data = warpbreaks))), "Good Job!"),
+  pass_if(~ identical(.result, summary(aov( breaks~factor(wool), data = warpbreaks))), "Good Job!"),
   fail_if(~ TRUE)
 )
 ```
@@ -241,7 +241,7 @@ How would you run an ANOVA to determine whether there is a difference between th
 
 ```{r exercise4-check}
 grade_result(
-  pass_if(~ identical(.result, summary(aov( breaks~tension * wool, data=warpbreaks))), "Good Job!"),
+  pass_if(~ identical(.result, summary(aov( breaks~factor(tension) * factor(wool), data=warpbreaks))), "Good Job!"),
   fail_if(~ TRUE)
 )
 ```
