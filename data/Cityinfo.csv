@@ -1,0 +1,20 @@
+City,State,Region,Populationmetro_2016,Sunshine_per,Bikecom_per,Year,Sportsteam_num
+New York,NY,NE,20685000,58,1.1,1625,9
+Los Angeles,CA,W,15135000,73,1.3,1781,8
+San Francisco,CA,W,5955000,66,4.4,1776,6
+Chicago,IL,MW,9185000,54,1.7,1803,5
+Minneapolis,MN,MW,2795000,58,4.6,1867,4
+Portland,OR,W,2000000,48,7.2,1845,1
+Dallas,TX,S,6280000,61,0.2,1841,4
+Philadelphia,PA,NE,5595000,56,1.9,1682,4
+Boston,MA,NE,4490000,58,2.4,1630,4
+Detroit,MI,MW,3660000,53,0.8,1701,4
+Denver,CO,W,2600000,69,2.5,1858,4
+Seattle,WA,W,3475000,47,3.7,1851,2
+Phoenix,AZ,W,4295000,85,0.8,1868,4
+Atlanta,GA,S,5120000,60,0.7,1843,3
+New Orleans,LA,S,925000,57,3.4,1718,2
+Houston,TX,S,6005000,59,0.6,1837,3
+Washington DC,DC,S,4950000,56,3.9,1790,4
+Miami,FL,S,5820000,70,0.9,1896,4
+Milwaukee,WI,MW,1415000,54,1,1833,2
