@@ -1,0 +1,298 @@
+---
+title: "Introduction to R and Vectors"
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+tutorial:
+  id: "R-vectors"
+  version: 0.5
+---
+
+```{r setup, include=FALSE}
+library(MASS)
+library(learnr)
+library(gradethis)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+learnr::tutorial_options(
+  exercise.timelimit = 60)
+```
+
+## Introduction to R
+
+In this module, you will learn how to use the programming language, R, to analyze data. While there are many programs we could use, R has a few advantages:
+
+    1. Cost. R is free!
+
+    2. Reproducible Research (self-documenting, repeatable)
+        - Self-Documenting = You can see the exact code you ran previously.
+        - Repeatable = You can run the exact code you ran previously.
+        
+        - Reproducibility is a big problem in science right now. 
+        - Many studies cannot be recreated and/or hold up when tested again!
+        
+    3. Scalable
+        - RStudio can analyze small or BIG datasets!
+        
+    4. Continually Upgrading
+        - A big community uses R-Studio and creates new updated tools in R.
+        - Ex: Artifical Inteligence, Machine Learning, Modeling, etc.
+    
+    5. Becoming the New Norm in Psychology
+        - Coding is ecoming the most in-demand skill across industries.
+        - This trend continues in Psychology & Higher Education as a whole.
+
+"It is not the most intellectual of the species that survives; it is not the strongest that survives; but the species that survives is the one that is able to adapt to and to adjust best to the changing environment in which it finds itself." - Charles Darwin
+
+### R-Studio
+
+RStudio is the most commonly used integrated development environment (IDE) for R. In other words, it is the most common way that people use to interact with R and write R code. In fact, you probably used RStudio and had to run some code in order to access this tutorial. We won't work within the RStudio environment for these tutorials directly, but it's worth getting to know it a little bit.
+
+### Four Windows
+
+![Figure 1: The RStudio environment](D:/BSOS_R_Tutorial/PSYC_Tutorials/images_folder/rstudio_env.jpg){#id .class width=700 height=445px}
+
+## What is a Code Block?
+
+Below is a picture of code block in R markdown.
+
+![Figure2: Code Block](D:/BSOS_R_Tutorial/PSYC_Tutorials/images_folder/code_block.jpg)
+
+
+- When you use a r-markdown file, you can write your code in a code block which is usually a grey space created inside the markdown file.
+- This feature is very helpful because it can run the code within the block.
+
+### Example Codes in R
+```{r echo=TRUE}
+#Example 1
+1+1
+
+2+3
+
+
+```
+
+```{r echo=TRUE}
+#Example 2
+1+1
+
+(1+1) / 2
+
+((1+1) / 2) * 3
+```
+
+```{r echo=TRUE}
+#Example 3
+
+"You can also write text in R using quotation marks"
+
+```
+
+### Try your own code below!
+
+```{r code_sandbox, exercise=TRUE, exercise.cap="example_coding_practice"}
+```
+
+## Types of Things you can make in R
+
+One of the major pros of R (and coding) is that we can save the code we write as its own object in which we can use later.
+
+- These objects we create are called "Vectors"
+- To create a vector we can use <-
+
+### Example of Vectors
+```{r echo=TRUE}
+Vector1 <- 1+1
+
+Vector2 <- (1+1) / 2
+
+Vector3 <- ((1+1) / 2) * 3
+
+```
+
+- Now if you are using RStudio, look at the environment at the top right box (refer to the picture from the beginning!) you can see Vector 1, Vector 2, Vector 3 & Vector 4.
+- These are the things we just created.
+- Now to reference them we just type their name in.
+
+### Referencing Vectors
+```{r echo=TRUE}
+Vector1
+Vector2
+Vector3
+```
+
+*Note: RStudio is extremely sensitive to typos, extra spaces or periods/commas. If these are added in then R thinks its a completely different thing you are referencing and/or it cannot understand what you are trying to do.*
+
+
+### Using Multiple Vectors
+```{r echo=TRUE}
+(Vector1 + Vector2) / (Vector3)
+
+(Vector1^Vector3) * (Vector2)
+
+
+Vector5 <- (((Vector1 + Vector2) / (Vector3)) * ((Vector1^Vector3) * (Vector2))) / Vector1
+Vector5
+```
+
+*Vectors are extremely useful when we start working with datasets and doing specific analyses!*
+
+### Try yourself!
+
+1. Use R to find the value of $2 * (18 + 5 * 2)^2$.
+
+```{r exercise1, exercise = TRUE}
+```
+
+```{r exercise1-check}
+grade_result(
+  pass_if(~ identical(.result, 2 * (18 + 5 * 2)^2), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+2. Use R to find the sum of squares of 1st five integers.
+
+```{r exercise2, exercise=TRUE}
+```
+
+```{r exercise2-check}
+grade_result(
+  pass_if(~ identical(.result, sum(1^2,2^2,3^2,4^2,5^2)), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+## Types of Vectors
+
+In R, there are a lot of different types of objects(i.e., vectors) we can create! Refer to the following link to explore more.
+
+[Vectors](https://www.tutorialspoint.com/r/r_vectors.htm#:~:text=Vectors%20are%20the%20most%20basic,%2C%20complex%2C%20character%20and%20raw)
+
+In this section we focus on:
+    - Single vs. Multiple Element Vectors
+    - Character & Numeric Vectors
+
+### Single vs. Multiple Element Vectors
+
+- As of now, we made vectors that were only one object. But these vectors can also include multiple objects.
+
+```{r echo=TRUE}
+#Single Element Vector
+Vector6a <- 24
+Vector6a
+
+Vector6b <- 25
+Vector6b
+
+Vector6c <- 26
+Vector6c
+
+Vector6a * 4
+
+#Multiple Elements Vector
+Vector7 <- c(24, 25, 26)
+Vector7
+```
+
+*Note: the c( , ) allows us to combine elements together*
+
+### Numeric vs. Character Vectors
+
+- Aside from the number of elements the type of them differ...
+  
+- Numeric refers to vectors containing some number
+- Character refers to vectors containing some text
+
+
+Note: There are technically more types of vectors and more specific types of numeric vectors.
+
+- You don't need to be able to tell the specific differences for all of these types.
+- We will start with working with Numeric & Character!
+
+Numeric vs. Character
+```{r echo=TRUE}
+#Numeric
+Vector6a
+Vector7
+
+#Character
+Vector8a <- "I like stats class!"
+Vector8a
+
+Vector8b <- c("Coding is cool", "Wow R is so fun", "I love coding")
+Vector8b
+```
+
+##### You can check the type of Vector using the `class ( )` function
+```{r echo=TRUE}
+#Numeric
+class(Vector6a)
+class(Vector7)
+
+#Character
+class(Vector8a)
+class(Vector8b)
+```
+
+#### You can even save vectors within a vector.
+```{r echo=TRUE}
+#sequences
+Vector9 <- c(Vector6a, Vector7, Vector8a, Vector8b) 			
+Vector9
+```
+
+### Try yourself!
+
+1. Create a vector to store first 3 multiples of 2.
+
+```{r exercise3, exercise=TRUE}
+```
+
+```{r exercise3-check}
+grade_result(
+  pass_if(~ identical(.result, c(2,4,6)), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+2. Save the following sentence as a vector named `sentence` : "R is fun to learn". Refer to your created vector as well.
+
+```{r exercise4, exercise=TRUE}
+```
+
+```{r exercise4-solution}
+sentence <- "R is fun to learn"
+sentence
+```
+
+```{r exercise4-code-check}
+grade_code()
+```
+
+3. How would you check the type of the last vector you created?
+
+```{r function}
+learnr::question("Which of these is the correct way to check the type of the vector `sentence`?",
+         answer("sentence", correct=FALSE),
+         answer("type(sentence)", correct = FALSE),
+         answer("class(sentence)",  correct = TRUE,  message = "Good job!"),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+4. Write the code in the following space to combine `sentence` with the given text : "Feeling good!" and save the combined object as a vector named `sentence2`. Print `sentence2`.
+
+```{r exercise5, exercise=TRUE}
+```
+
+```{r exercise5-solution}
+sentence2 <- c(sentence,"Feeling good!")
+sentence2
+```
+
+```{r exercise5-code-check}
+grade_code()
+```
