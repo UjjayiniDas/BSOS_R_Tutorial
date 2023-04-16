@@ -5,7 +5,7 @@ output:
     progressive: true
 runtime: shiny_prerendered
 tutorial:
-  id: "R-vectors"
+  id: "R-functions"
   version: 0.5
 ---
 
