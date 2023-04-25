@@ -110,7 +110,7 @@ library(readr)
 Datasets can be in different formats. The most common forms are 'xlsx' and 'csv.'
 
 ```{r echo=TRUE, eval=FALSE}
-# This is an example -- you will need to change the text inside paranthesis to the place where the data file is located ON YOUR OWN COMPUTER
+# This is an example -- you will need to change the text inside parenthesis to the place where the data file is located ON YOUR OWN COMPUTER
 # The most common format to run such functions are read_xlsx("file path in local computer")
 
 Excel.dat.orginal <- read_xlsx("STAT200 Data.xlsx")
