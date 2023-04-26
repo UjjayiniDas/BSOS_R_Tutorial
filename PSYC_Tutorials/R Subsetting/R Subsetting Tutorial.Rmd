@@ -1,0 +1,507 @@
+---
+title: "Data sets in R"
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+tutorial:
+  id: "R-vectors"
+  version: 0.5
+---
+
+```{r setup, include=FALSE}
+library(MASS)
+library(learnr)
+library(gradethis)
+library(readxl)
+library(xlsx)
+library(datasets)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+learnr::tutorial_options(
+  exercise.timelimit = 60)
+#load("D:/BSOS_R_Tutorial/PSYC_Tutorials/data_psych/exam_scores (1).rda")
+#write.xlsx(exam_scores,"D:/DATA FOR PSYCH/STAT200_Data.xlsx")
+```
+
+
+## Section One : Extracting Rows and Columns
+
+In this module, we will learn some basic data set operations.
+
+- We will start this lesson by using the class dataset we used in Lesson 3
+- Let's start by using the csv class data file
+
+### Opening/loading Data set
+
+```{r echo=TRUE}
+dat.org <- read.csv("D:/BSOS_R_Tutorial/PSYC_Tutorials/data_psych/STAT200_Data_csv.csv")
+dat.work <- dat.org
+
+#Note: Make sure you are using readxl instead of readx1
+#You will need to redo this part to open the dataset in your folder
+```
+
+### Revision of Related Functions
+
+In this section we will talk about a few exploratory functions that can help you explore the data set more. Carefully look at the following code chunk to understand what each function does.
+
+```{r echo=TRUE}
+#Name of the columns
+colnames(dat.work) #See all the variable names in dataset
+
+#General Functions
+str(dat.work) #See structure of all variables in dataset
+summary(dat.work) #See numerical/character/factor summary of all variables in dataset
+
+#Head/Tail
+head(dat.work) #see first few rows
+tail(dat.work) #see last few rows
+
+#View
+View(dat.work) #View entire dataset
+```
+
+
+### Extracting Specific Variables (columns)
+
+In this section we will see how to extract a specific variable from the entire dataset. Often we will need to look at one single variable or do some mathematical operations on some specific variables.
+
+```{r echo=TRUE}
+#This will help us visualize what we will do... 
+head(dat.work)
+
+#This is how to Extract a specific variable via $
+dat.work$sleep_week
+dat.work$motivation
+
+#This is how to Extract a specific variables via [ ]
+dat.work[,2] # extracting the values for only column 2
+dat.work[,3] # extracting the values for only column 3
+dat.work[,2:3] #extracting the values for only column 2 and 3
+```
+
+*Note:* While using [ ] for extracting variables, the format should be [Row, Column]. 
+
+
+### Extracting Specific Cases(Rows)
+
+```{r echo=TRUE}
+#Help Visualize what we will do... 
+head(dat.work)
+
+#Extracting specific rows (Row 1, Row 5 & Row 1:5)
+dat.work[1,]
+dat.work[5,]
+dat.work[1:5,]
+```
+
+### Selecting Specific Variables & rows in the Dataset
+
+```{r echo=TRUE}
+#Help Visualize what we will do... 
+head(dat.work)
+
+#Here we can see that a [1,] indicates row 1 & [,1] indicates column 1
+dat.work[1,]
+dat.work[,1]
+
+
+#Extracting specific variables & rows
+
+#Here we extract row 1 and column 1
+dat.work[1,1]
+
+#Here we extract row 1 to 3 & column 1 to 3
+dat.work[1:3, 1:3]
+```
+
+### Try it!
+
+1. Load the dataset "airquality" from the package "datasets" and store it as an object called *airquality*. Print the first few rows of the dataset.
+
+```{r code_sandbox, exercise=TRUE, exercise.cap="exercise1"}
+```
+
+2. Choose the correct one.
+
+```{r question1}
+question("To extract the solar radiation amounts in the air, which of the following ways can be used?",
+         answer("airquality$Solar.R", correct=TRUE, message = "Good job!"),
+         answer("airquality$2", correct = FALSE),
+         answer("airquality[2,]",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+
+learnr::question("How can you extract the values of first 3 variables for the first 3 cases?",
+         answer("airquality[1:3,1:3]", correct=TRUE, message = "Good job!"),
+         answer("airquality[1:3,]", correct = FALSE),
+         answer("airquality[,1:3]",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+
+## Section Two : Extracting & Building Vectors / Dataframes
+
+### Creating Vectors from Variables in Datasets
+
+```{r echo=TRUE}
+#Help Visualize what we will do... 
+head(dat.work)
+
+#Now we access Student Sleep variable in the dataset
+Sleep <- dat.work$sleep_week
+Sleep
+
+#Next we access Student Motivation in the dataset
+Motivation <- dat.work$motivation
+Motivation
+
+#Now we access student Exam Scores in the dataset
+Scores <- dat.work$exam_score
+Scores
+```
+
+### Selecting specific Parts of Vectors
+
+We can also use the [row,column] function for specific values in a vector. Note that we can only pull the rows here since this is a vector and **NOT** a dataframe.
+
+
+```{r echo=TRUE}
+#First 3 Rows in Sleep
+Sleep[1:3]
+
+#First 3 Rows in Motivation
+Motivation[1:3]
+
+#First 3 Rows in Scores
+Scores[1:3]
+```
+
+### Creating New Vectors 
+
+Here we will do some basic arithmetic using RStudio, except now we will reference specific variables in the dataset using the $ .
+  
+```{r echo=TRUE}
+#New Vectors
+#Creating Vectors from the Dataset (and doing Arithmetic)
+
+Sleep.DividedbyTwo <- dat.work$sleep_week/2
+
+Motivation.MultipliedbyTwo <- dat.work$motivation*2
+
+Scores.Squared <- dat.work$exam_score^2
+
+Combining.Vectors <- dat.work$sleep_week + dat.work$motivation + dat.work$exam_score
+
+# Viewing New Vectors
+head(Sleep.DividedbyTwo)
+head(Motivation.MultipliedbyTwo)
+head(Scores.Squared)
+head(Combining.Vectors)
+```
+
+### Alternative Take on Creating New Vectors
+
+We can create these same vectors by pulling them directly out of the dataset. Here we do this; and then select only the first 3 rows/rows of data.
+    
+```{r echo=TRUE}
+#New Vectors
+#Creating Vectors from the Dataset (first 3 rows/rows only)
+
+First3.Sleep <- dat.work$sleep_week[1:3]
+First3.Motivation <- dat.work$motivation[1:3]
+First3.Scores <- dat.work$exam_score[1:3]
+
+#Viewing New Vectors
+First3.Sleep
+First3.Motivation
+First3.Scores
+```
+
+Now try doing some arithmetic by your own!
+
+### Try it!
+
+Use the pre-loaded data set on airquality for this exercises.
+
+1. Create a vector that subtracts 78 from each of the values of the variable `Temp`. Divide this new vector by 9. Store the resulting vector as `std_temp`.
+
+```{r q3, exercise = TRUE}
+```
+
+```{r q3-check}
+grade_result(
+  pass_if(~ identical(.result, (airquality$Temp-78)/9), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+
+## Section Three : Subsetting
+
+In this section we will now "subset" specific variables and values in RStudio.
+
+
+### Review Original Dataset Structure & Review Factors
+
+```{r echo=TRUE}
+#Review Structure of Original Data
+str(dat.org)
+
+#Change Statistics Anxiety Variable from Numeric to Factor
+dat.work$anxiety <- as.factor(dat.work$anxiety)
+    #1 - Low Anxiety
+    #2 - Medium Anxiety
+    #3 - High Anxiety
+
+
+#Checking if the change worked!
+str(dat.org$anxiety) #Original --> Numeric
+str(dat.work$anxiety) #Working --> Factor
+
+levels(dat.work$anxiety) #This will show us each of the factors of the variable
+```
+
+### Factor Subsetting
+
+We briefly discussed Factors last week with the Describe.by() function. For details, refer back to [this](https://umd.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=772f3370-5d2e-4fb4-8e23-acd201762d34&start=405.655013)
+
+```{r echo=TRUE}
+library(psych)
+describe.by(dat.work, dat.work$anxiety)
+
+    #Here we see 3 datasets which reflect a summary of the variables anxiety Factor
+          #1 - Low Anxiety #Mean exam score = 80.33
+          #2 - Medium Anxiety #Mean exam score = 89.73
+          #3 - High Anxiety #Mean exam score = 76.43
+
+```
+
+### Specific method to Subset Variables by Factors
+
+Here we look at exam scores by each factor of *anxiety* by directly referencing the factor we are interested in using [ ] and then ==
+You can see this below.
+    
+```{r echo=TRUE}
+#Subset factors directly using the [] function
+
+#Exam Scores for Students with Low Anxiety (anxiety == 1)
+dat.work$exam_score[dat.work$anxiety == 1]
+
+#Exam Scores for Students with medium Anxiety (anxiety == 2)
+dat.work$exam_score[dat.work$anxiety == 2]
+
+#Exam Scores for Students with High Anxiety (anxiety == 3)
+dat.work$exam_score[dat.work$anxiety == 3]
+
+#Mean of Scores per Each Subsetted Factor
+
+#Mean of Exam Scores for Students with Low Anxiety (anxiety == 1)
+mean(dat.work$exam_score[dat.work$anxiety == 1])
+
+#Mean of Exam Scores for Students with Medium Anxiety (anxiety == 2)
+mean(dat.work$exam_score[dat.work$anxiety == 2])
+
+#Mean of Exam Scores for Students with High Anxiety (anxiety == 3)
+mean(dat.work$exam_score[dat.work$anxiety == 3])
+
+  #Note:Compare these means with the ones provided in the describe.by() function!
+        #1 - Low Anxiety #Mean = 80.33
+        #2 - Medium Anxiety #Mean = 89.73
+        #3 - High Anxiety #Mean = 76.43
+
+```
+
+We can use these subsets when we examine correlations for different groups! This is very useful when we do data analysis.Here we see the correlation between exam Scores & the amount of sleep a week before exam."
+
+```{r echo=TRUE}
+#Correlation Test between Sleep & Test Scores
+
+cor1 <- cor.test(dat.work$exam_score, dat.work$sleep_week)
+cor1
+
+#Correlation Test between Sleep & Test Scores for people who had Low anxiety
+cor2 <- cor.test(dat.work$exam_score[dat.work$anxiety == 1], dat.work$sleep_week[dat.work$anxiety == 1])
+cor2
+
+#Correlation Test between Sleep & Test Scores for people who had High anxiety
+cor3 <- cor.test(dat.work$exam_score[dat.work$anxiety == 3], dat.work$sleep_week[dat.work$anxiety == 3])
+cor3
+
+###################
+#Note: anxiety
+###################
+  #1 = Low Anxiety
+  #2 = Medium Anxiety
+  #3 = High Anxiety
+
+```
+
+### Other Logical Operators
+
+There are other logical operators for subsetting which are briefly reviewed below.
+
+### Equal to/Not Equal to
+
+```{r echo=TRUE}
+## Equal to
+#Equal to 1 (Low Anxiety)
+dat.work$exam_score[dat.work$anxiety == 1]
+
+mean(dat.work$exam_score[dat.work$anxiety == 1])
+
+## Not Equal to
+#Not Equal to 1 (Not low Anxiety)
+dat.work$exam_score[dat.work$anxiety != 1]
+
+mean(dat.work$exam_score[dat.work$anxiety != 1])
+```
+
+### AND
+
+```{r echo=TRUE}
+#Preparing Dataset
+#First Need Converting Note Taking Type at Time Period 1
+dat.work$Note_Type_T1 <- as.factor(dat.work$note_mode)
+
+#Viewing to See if it Worked
+str(dat.work$Note_Type_T1)
+levels(dat.work$Note_Type_T1)
+    #Paper = 1
+    #Computer = 2
+
+#AND LOGICAL OPERATOR
+#&
+
+#Exam Scores for Low Anxiety (1) & Note Taking Mode Paper (1)
+dat.work$exam_score[dat.work$anxiety == 1 & dat.work$Note_Type_T1 == 1]
+
+#The Mean
+mean(dat.work$exam_score[dat.work$anxiety == 1 & dat.work$Note_Type_T1 == 1])
+
+#Length (How many rows qualified)
+length(dat.work$exam_score[dat.work$anxiety == 1 & dat.work$Note_Type_T1 == 1])
+
+    
+#Exam Scores for High Anxiety (3) & Note Taking Mode Computer (2)
+dat.work$exam_score[dat.work$anxiety == 3 & dat.work$Note_Type_T1 == 2]
+
+#The Mean
+mean(dat.work$exam_score[dat.work$anxiety == 3 & dat.work$Note_Type_T1 == 2])
+
+#Length (How many rows qualified)
+length(dat.work$exam_score[dat.work$anxiety == 3 & dat.work$Note_Type_T1 == 2])
+```
+
+There are many other logical operators also!
+
+### Less than / Less than or equal to Logical Operator
+
+```{r echo=TRUE}
+#Less than (<)
+dat.work$exam_score[dat.work$sleep_week < 2520]
+
+#The Mean    
+mean(dat.work$exam_score[dat.work$sleep_week < 2520])
+    
+#Length (How many rows qualified)
+length(dat.work$exam_score[dat.work$sleep_week < 2520])
+
+#Less than or equal to (<=)
+dat.work$exam_score[dat.work$sleep_week <= 2520]
+    
+#The Mean    
+mean(dat.work$exam_score[dat.work$sleep_week <= 2520])
+    
+#Length (How many rows qualified)
+length(dat.work$exam_score[dat.work$sleep_week<= 2520])
+```
+
+
+### Greater than / greater than or equal to Logical Operator
+
+```{r echo=TRUE}
+#Greater than (>)
+dat.work$exam_score[dat.work$sleep_week > 2520]
+
+#The Mean    
+mean(dat.work$exam_score[dat.work$sleep_week > 2520])
+    
+#Length (How many rows qualified)
+length(dat.work$exam_score[dat.work$sleep_week > 2520])
+
+#Greater than or equal to (>=)
+dat.work$exam_score[dat.work$sleep_week >= 2520]
+    
+#The Mean    
+mean(dat.work$exam_score[dat.work$sleep_week >= 2520])
+    
+#Length (How many rows qualified)
+length(dat.work$exam_score[dat.work$sleep_week >= 2520])
+```
+
+Try some subsetting by your own!
+
+### Try it!
+
+For this set of exercises, use `airquality` again.
+
+1. Convert the `Month` variable into a factor. 
+
+```{r q4, exercise = TRUE}
+```
+
+```{r q4-check}
+grade_result(
+  pass_if(~ identical(.result, as.factor(airquality$Month)), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+2. What are the observations for wind speed in month 6?
+
+```{r q5, exercise=TRUE}
+```
+
+```{r q5-check}
+grade_result(
+  pass_if(~ identical(.result, airquality$Wind[airquality$Month==6]), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+3. Using subsetting on `airquality`, print the wind speed values for month 6 and `Temp` being less than or equal to 80.
+
+```{r q6, exercise=TRUE}
+```
+
+```{r q6-check}
+grade_result(
+  pass_if(~ identical(.result, airquality$Wind[airquality$Month==6 & airquality$Temp <=80]), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+4. Answer the following.
+
+```{r question7}
+learnr::question("Select the correct way to check the number of observations you had after the last subsetting operation, i.e. in question 3.",
+         answer("length(airquality$Month==6 & airquality$Temp <=80)", correct=FALSE),
+         answer("length(airquality$Wind[airquality$Month==6 & airquality$Temp <=80])", correct = TRUE,  message = "Good job!"),
+         answer("length(airquality$Wind[airquality$Month=6 & Temp <=80])",  correct = FALSE),
+         allow_retry = TRUE,
+         random_answer_order = TRUE
+)
+```
+
+If you want to find more on these operations, check the following links!
+[operators](https://www.statmethods.net/management/operators.html)
+
+[subset](https://www.statmethods.net/management/subset.html)
+
+
+
