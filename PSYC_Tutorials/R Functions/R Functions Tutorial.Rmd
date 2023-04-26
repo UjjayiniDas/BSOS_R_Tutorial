@@ -114,7 +114,7 @@ Datasets can be in different formats. The most common forms are 'xlsx' and 'csv.
 # The most common format to run such functions are read_xlsx("file path in local computer")
 
 Excel.dat.orginal <- read_xlsx("STAT200 Data.xlsx")
-Excel.dat.orginal <- read_xlsx("../Stat 200 - Spring 2021/STAT200 Data.xlsx")
+Excel.dat.orginal <- read_xlsx("../data_psych/STAT200_Data.xlsx")
 
 Excel.dat.working <- Excel.dat.orginal
 
@@ -124,8 +124,8 @@ Excel.dat.working
 Opening CSV Dataset
 
 ```{r echo=TRUE,eval=FALSE}
-CSV.dat.orginal <- read.csv("STAT200 Data.csv")
-CSV.dat.orginal <- read.csv("../Stat 200 - Spring 2021/STAT200 Data.csv")
+CSV.dat.orginal <- read.csv("STAT200 Data_csv.csv")
+CSV.dat.orginal <- read.csv("../data_psych/STAT200 Data.csv")
 
 CSV.dat.working <- CSV.dat.orginal
 
@@ -221,5 +221,18 @@ describe.by(Excel.dat.working, Excel.dat.working$`Note Taking Modality (paper =1
 
 *Note: More information provided [here](https://www.rdocumentation.org/packages/psych/versions/2.0.12/topics/describeBy)*
 
+### Submitting work
+
+```{r submission-setup}
+submission_code <- function(UID){
+  httr::sha1_hash('R-functions',as.character(UID))
+}
+```
+
+Generate your submission code by putting in your UID in the function below. For example, if your UID is `2`, then your code should look like `submission_code(UID = 2)`
+```{r submission, exercise = TRUE}
+# Replace the number below with your UID
+submission_code(2)
+```
 
 
