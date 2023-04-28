@@ -20,8 +20,6 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 learnr::tutorial_options(
   exercise.timelimit = 60)
-#load("D:/BSOS_R_Tutorial/PSYC_Tutorials/data_psych/exam_scores (1).rda")
-#write.xlsx(exam_scores,"D:/DATA FOR PSYCH/STAT200_Data.xlsx")
 ```
 
 
@@ -29,13 +27,13 @@ learnr::tutorial_options(
 
 In this module, we will learn some basic data set operations.
 
-- We will start this lesson by using the class dataset we used in Lesson 3
-- Let's start by using the csv class data file
+- We will start this lesson by using the class dataset we used in Lesson 3.
+- Let's start by using the csv class data file.
 
 ### Opening/loading Data set
 
 ```{r echo=TRUE}
-dat.org <- read.csv("D:/BSOS_R_Tutorial/PSYC_Tutorials/data_psych/STAT200_Data_csv.csv")
+dat.org <- read.csv("D:/BSOS_R_Tutorial/PSYC_Tutorials/data_psych/STAT200_Data_Update_4.8.csv")
 dat.work <- dat.org
 
 #Note: Make sure you are using readxl instead of readx1
@@ -72,8 +70,8 @@ In this section we will see how to extract a specific variable from the entire d
 head(dat.work)
 
 #This is how to Extract a specific variable via $
-dat.work$sleep_week
-dat.work$motivation
+dat.work$Sleep
+dat.work$Motivation
 
 #This is how to Extract a specific variables via [ ]
 dat.work[,2] # extracting the values for only column 2
@@ -133,7 +131,9 @@ question("To extract the solar radiation amounts in the air, which of the follow
          allow_retry = TRUE,
          random_answer_order = TRUE
 )
+```
 
+```{r question2}
 learnr::question("How can you extract the values of first 3 variables for the first 3 cases?",
          answer("airquality[1:3,1:3]", correct=TRUE, message = "Good job!"),
          answer("airquality[1:3,]", correct = FALSE),
@@ -143,6 +143,7 @@ learnr::question("How can you extract the values of first 3 variables for the fi
 )
 ```
 
+###
 
 ## Section Two : Extracting & Building Vectors / Dataframes
 
@@ -153,15 +154,15 @@ learnr::question("How can you extract the values of first 3 variables for the fi
 head(dat.work)
 
 #Now we access Student Sleep variable in the dataset
-Sleep <- dat.work$sleep_week
+Sleep <- dat.work$Sleep
 Sleep
 
 #Next we access Student Motivation in the dataset
-Motivation <- dat.work$motivation
+Motivation <- dat.work$Motivation
 Motivation
 
 #Now we access student Exam Scores in the dataset
-Scores <- dat.work$exam_score
+Scores <- dat.work$Scores
 Scores
 ```
 
@@ -189,13 +190,13 @@ Here we will do some basic arithmetic using RStudio, except now we will referenc
 #New Vectors
 #Creating Vectors from the Dataset (and doing Arithmetic)
 
-Sleep.DividedbyTwo <- dat.work$sleep_week/2
+Sleep.DividedbyTwo <- dat.work$Sleep/2
 
-Motivation.MultipliedbyTwo <- dat.work$motivation*2
+Motivation.MultipliedbyTwo <- dat.work$Motivation*2
 
-Scores.Squared <- dat.work$exam_score^2
+Scores.Squared <- dat.work$Scores^2
 
-Combining.Vectors <- dat.work$sleep_week + dat.work$motivation + dat.work$exam_score
+Combining.Vectors <- dat.work$Sleep + dat.work$Motivation + dat.work$Scores
 
 # Viewing New Vectors
 head(Sleep.DividedbyTwo)
@@ -212,9 +213,9 @@ We can create these same vectors by pulling them directly out of the dataset. He
 #New Vectors
 #Creating Vectors from the Dataset (first 3 rows/rows only)
 
-First3.Sleep <- dat.work$sleep_week[1:3]
-First3.Motivation <- dat.work$motivation[1:3]
-First3.Scores <- dat.work$exam_score[1:3]
+First3.Sleep <- dat.work$Sleep[1:3]
+First3.Motivation <- dat.work$Motivation[1:3]
+First3.Scores <- dat.work$Scores[1:3]
 
 #Viewing New Vectors
 First3.Sleep
@@ -240,6 +241,7 @@ grade_result(
 )
 ```
 
+###
 
 ## Section Three : Subsetting
 
@@ -253,17 +255,17 @@ In this section we will now "subset" specific variables and values in RStudio.
 str(dat.org)
 
 #Change Statistics Anxiety Variable from Numeric to Factor
-dat.work$anxiety <- as.factor(dat.work$anxiety)
+dat.work$Stat.Anxiety <- as.factor(dat.work$Stat.Anxiety)
     #1 - Low Anxiety
     #2 - Medium Anxiety
     #3 - High Anxiety
 
 
 #Checking if the change worked!
-str(dat.org$anxiety) #Original --> Numeric
-str(dat.work$anxiety) #Working --> Factor
+str(dat.org$Stat.Anxiety) #Original --> Numeric
+str(dat.work$Stat.Anxiety) #Working --> Factor
 
-levels(dat.work$anxiety) #This will show us each of the factors of the variable
+levels(dat.work$Stat.Anxiety) #This will show us each of the factors of the variable
 ```
 
 ### Factor Subsetting
@@ -272,7 +274,7 @@ We briefly discussed Factors last week with the Describe.by() function. For deta
 
 ```{r echo=TRUE}
 library(psych)
-describe.by(dat.work, dat.work$anxiety)
+describe.by(dat.work, dat.work$Stat.Anxiety)
 
     #Here we see 3 datasets which reflect a summary of the variables anxiety Factor
           #1 - Low Anxiety #Mean exam score = 80.33
@@ -290,24 +292,24 @@ You can see this below.
 #Subset factors directly using the [] function
 
 #Exam Scores for Students with Low Anxiety (anxiety == 1)
-dat.work$exam_score[dat.work$anxiety == 1]
+dat.work$Scores[dat.work$Stat.Anxiety == 1]
 
 #Exam Scores for Students with medium Anxiety (anxiety == 2)
-dat.work$exam_score[dat.work$anxiety == 2]
+dat.work$Scores[dat.work$Stat.Anxiety == 2]
 
 #Exam Scores for Students with High Anxiety (anxiety == 3)
-dat.work$exam_score[dat.work$anxiety == 3]
+dat.work$Scores[dat.work$Stat.Anxiety == 3]
 
 #Mean of Scores per Each Subsetted Factor
 
 #Mean of Exam Scores for Students with Low Anxiety (anxiety == 1)
-mean(dat.work$exam_score[dat.work$anxiety == 1])
+mean(dat.work$Scores[dat.work$Stat.Anxiety == 1])
 
 #Mean of Exam Scores for Students with Medium Anxiety (anxiety == 2)
-mean(dat.work$exam_score[dat.work$anxiety == 2])
+mean(dat.work$Scores[dat.work$Stat.Anxiety == 2])
 
 #Mean of Exam Scores for Students with High Anxiety (anxiety == 3)
-mean(dat.work$exam_score[dat.work$anxiety == 3])
+mean(dat.work$Scores[dat.work$Stat.Anxiety == 1])
 
   #Note:Compare these means with the ones provided in the describe.by() function!
         #1 - Low Anxiety #Mean = 80.33
@@ -321,15 +323,15 @@ We can use these subsets when we examine correlations for different groups! This
 ```{r echo=TRUE}
 #Correlation Test between Sleep & Test Scores
 
-cor1 <- cor.test(dat.work$exam_score, dat.work$sleep_week)
+cor1 <- cor.test(dat.work$Scores, dat.work$Sleep)
 cor1
 
 #Correlation Test between Sleep & Test Scores for people who had Low anxiety
-cor2 <- cor.test(dat.work$exam_score[dat.work$anxiety == 1], dat.work$sleep_week[dat.work$anxiety == 1])
+cor2 <- cor.test(dat.work$Scores[dat.work$Stat.Anxiety == 1], dat.work$Sleep[dat.work$Stat.Anxiety == 1])
 cor2
 
 #Correlation Test between Sleep & Test Scores for people who had High anxiety
-cor3 <- cor.test(dat.work$exam_score[dat.work$anxiety == 3], dat.work$sleep_week[dat.work$anxiety == 3])
+cor3 <- cor.test(dat.work$Scores[dat.work$Stat.Anxiety == 3], dat.work$Scores[dat.work$Stat.Anxiety == 3])
 cor3
 
 ###################
@@ -350,15 +352,15 @@ There are other logical operators for subsetting which are briefly reviewed belo
 ```{r echo=TRUE}
 ## Equal to
 #Equal to 1 (Low Anxiety)
-dat.work$exam_score[dat.work$anxiety == 1]
+dat.work$Scores[dat.work$Stat.Anxiety == 1]
 
-mean(dat.work$exam_score[dat.work$anxiety == 1])
+mean(dat.work$Scores[dat.work$Stat.Anxiety == 1])
 
 ## Not Equal to
 #Not Equal to 1 (Not low Anxiety)
-dat.work$exam_score[dat.work$anxiety != 1]
+dat.work$Scores[dat.work$Stat.Anxiety != 1]
 
-mean(dat.work$exam_score[dat.work$anxiety != 1])
+mean(dat.work$Scores[dat.work$Stat.Anxiety != 1])
 ```
 
 ### AND
@@ -366,35 +368,33 @@ mean(dat.work$exam_score[dat.work$anxiety != 1])
 ```{r echo=TRUE}
 #Preparing Dataset
 #First Need Converting Note Taking Type at Time Period 1
-dat.work$Note_Type_T1 <- as.factor(dat.work$note_mode)
+dat.work$Note_Type_T1 <- as.factor(dat.work$Note_Type_Name)
 
 #Viewing to See if it Worked
 str(dat.work$Note_Type_T1)
 levels(dat.work$Note_Type_T1)
-    #Paper = 1
-    #Computer = 2
 
 #AND LOGICAL OPERATOR
 #&
 
-#Exam Scores for Low Anxiety (1) & Note Taking Mode Paper (1)
-dat.work$exam_score[dat.work$anxiety == 1 & dat.work$Note_Type_T1 == 1]
+#Exam Scores for Low Anxiety (1) & Note Taking Mode Paper
+dat.work$Scores[dat.work$Stat.Anxiety == 1 & dat.work$Note_Type_T1 == "Paper"]
 
 #The Mean
-mean(dat.work$exam_score[dat.work$anxiety == 1 & dat.work$Note_Type_T1 == 1])
+mean(dat.work$Scores[dat.work$Stat.Anxiety == 1 & dat.work$Note_Type_T1 == "Paper"])
 
 #Length (How many rows qualified)
-length(dat.work$exam_score[dat.work$anxiety == 1 & dat.work$Note_Type_T1 == 1])
+length(dat.work$Scores[dat.work$Stat.Anxiety == 1 & dat.work$Note_Type_T1 == "Paper"])
 
     
-#Exam Scores for High Anxiety (3) & Note Taking Mode Computer (2)
-dat.work$exam_score[dat.work$anxiety == 3 & dat.work$Note_Type_T1 == 2]
+#Exam Scores for High Anxiety (3) & Note Taking Mode Computer
+dat.work$Scores[dat.work$Stat.Anxiety == 3 & dat.work$Note_Type_T1 == "Computer"]
 
 #The Mean
-mean(dat.work$exam_score[dat.work$anxiety == 3 & dat.work$Note_Type_T1 == 2])
+mean(dat.work$Scores[dat.work$Stat.Anxiety == 3 & dat.work$Note_Type_T1 == "Computer"])
 
 #Length (How many rows qualified)
-length(dat.work$exam_score[dat.work$anxiety == 3 & dat.work$Note_Type_T1 == 2])
+length(dat.work$Scores[dat.work$Stat.Anxiety == 3 & dat.work$Note_Type_T1 == "Computer"])
 ```
 
 There are many other logical operators also!
@@ -403,22 +403,22 @@ There are many other logical operators also!
 
 ```{r echo=TRUE}
 #Less than (<)
-dat.work$exam_score[dat.work$sleep_week < 2520]
+dat.work$Scores[dat.work$Sleep < 427]
 
 #The Mean    
-mean(dat.work$exam_score[dat.work$sleep_week < 2520])
+mean(dat.work$Scores[dat.work$Sleep < 427])
     
 #Length (How many rows qualified)
-length(dat.work$exam_score[dat.work$sleep_week < 2520])
+length(dat.work$Scores[dat.work$Sleep < 427])
 
 #Less than or equal to (<=)
-dat.work$exam_score[dat.work$sleep_week <= 2520]
+dat.work$Scores[dat.work$Sleep <= 427]
     
 #The Mean    
-mean(dat.work$exam_score[dat.work$sleep_week <= 2520])
-    
+mean(dat.work$Scores[dat.work$Sleep <= 427])
+
 #Length (How many rows qualified)
-length(dat.work$exam_score[dat.work$sleep_week<= 2520])
+length(dat.work$Scores[dat.work$Sleep <= 427])
 ```
 
 
@@ -426,23 +426,30 @@ length(dat.work$exam_score[dat.work$sleep_week<= 2520])
 
 ```{r echo=TRUE}
 #Greater than (>)
-dat.work$exam_score[dat.work$sleep_week > 2520]
+dat.work$Scores[dat.work$Sleep > 427]
 
 #The Mean    
-mean(dat.work$exam_score[dat.work$sleep_week > 2520])
+mean(dat.work$Scores[dat.work$Sleep > 427])
     
 #Length (How many rows qualified)
-length(dat.work$exam_score[dat.work$sleep_week > 2520])
+length(dat.work$Scores[dat.work$Sleep > 427])
 
 #Greater than or equal to (>=)
-dat.work$exam_score[dat.work$sleep_week >= 2520]
+dat.work$Scores[dat.work$Sleep >= 427]
     
 #The Mean    
-mean(dat.work$exam_score[dat.work$sleep_week >= 2520])
+mean(dat.work$Scores[dat.work$Sleep >= 427])
     
 #Length (How many rows qualified)
-length(dat.work$exam_score[dat.work$sleep_week >= 2520])
+length(dat.work$Scores[dat.work$Sleep >= 427])
 ```
+
+If you want to find more on these operations, check the following links!
+
+[operators](https://www.statmethods.net/management/operators.html)
+
+[subset](https://www.statmethods.net/management/subset.html)
+
 
 Try some subsetting by your own!
 
@@ -498,10 +505,22 @@ learnr::question("Select the correct way to check the number of observations you
 )
 ```
 
-If you want to find more on these operations, check the following links!
-[operators](https://www.statmethods.net/management/operators.html)
+###
 
-[subset](https://www.statmethods.net/management/subset.html)
+## Submitting Work
+
+```{r submission-setup}
+submission_code <- function(UID){
+  httr::sha1_hash('R-functions',as.character(UID))
+}
+```
+
+Generate your submission code by putting in your UID in the function below. For example, if your UID is `2`, then your code should look like `submission_code(UID = 2)`
+```{r submission, exercise = TRUE}
+# Replace the number below with your UID
+submission_code(2)
+```
+
 
 
 
