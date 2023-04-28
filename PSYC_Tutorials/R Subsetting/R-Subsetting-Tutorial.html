@@ -14,7 +14,7 @@
 <meta name="allow-skip" content="false" />
 <meta name="learnr-version-prerender" content="0.11.2.9000" />
 
-<title>Data sets in R</title>
+<title>Subsetting in R</title>
 
 <!-- header-includes START -->
 <!-- HEAD_CONTENT -->
@@ -814,7 +814,7 @@ learnr::tutorial_options(
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::register_http_handlers(session, metadata = list(id = "R-vectors", version = 0.5))
+learnr:::register_http_handlers(session, metadata = list(id = "R-subsetting", version = 0.5))
 </script>
 
 
@@ -876,15 +876,15 @@ learnr:::store_exercise_cache(structure(list(label = "code_sandbox", global_setu
  
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "question1", question = structure("To extract the solar radiation amounts in the air, which of the following ways can be used?", html = TRUE, class = c("html", 
-"character")), answers = list(structure(list(id = "lnr_ans_4936bd8", 
+"character")), answers = list(structure(list(id = "lnr_ans_96b80ff", 
     option = "airquality$Solar.R", value = "airquality$Solar.R", 
     label = structure("airquality$Solar.R", html = TRUE, class = c("html", 
     "character")), correct = TRUE, message = structure("Good job!", html = TRUE, class = c("html", 
     "character")), type = "literal"), class = c("tutorial_question_answer", 
-"tutorial_quiz_answer")), structure(list(id = "lnr_ans_8ea338b", 
+"tutorial_quiz_answer")), structure(list(id = "lnr_ans_40f77fc", 
     option = "airquality$2", value = "airquality$2", label = structure("airquality$2", html = TRUE, class = c("html", 
     "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
-"tutorial_quiz_answer")), structure(list(id = "lnr_ans_3177aa5", 
+"tutorial_quiz_answer")), structure(list(id = "lnr_ans_9b2a0a2", 
     option = "airquality[2,]", value = "airquality[2,]", label = structure("airquality[2,]", html = TRUE, class = c("html", 
     "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
 "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
@@ -894,7 +894,7 @@ learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label 
 "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
 "character")), message = NULL, post_message = NULL), ids = list(
     answer = "question1-answer", question = "question1"), loading = NULL, 
-    random_answer_order = TRUE, allow_retry = TRUE, seed = 594429307.723197, 
+    random_answer_order = TRUE, allow_retry = TRUE, seed = 1769984578.67579, 
     options = list()), class = c("learnr_radio", "tutorial_question"
 )), session = session)
 </script>
@@ -902,16 +902,16 @@ learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label 
 
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "question2", question = structure("How can you extract the values of first 3 variables for the first 3 cases?", html = TRUE, class = c("html", 
-"character")), answers = list(structure(list(id = "lnr_ans_a4bef90", 
+"character")), answers = list(structure(list(id = "lnr_ans_af6774a", 
     option = "airquality[1:3,1:3]", value = "airquality[1:3,1:3]", 
     label = structure("airquality[1:3,1:3]", html = TRUE, class = c("html", 
     "character")), correct = TRUE, message = structure("Good job!", html = TRUE, class = c("html", 
     "character")), type = "literal"), class = c("tutorial_question_answer", 
-"tutorial_quiz_answer")), structure(list(id = "lnr_ans_2c48a6d", 
+"tutorial_quiz_answer")), structure(list(id = "lnr_ans_fb4c7c9", 
     option = "airquality[1:3,]", value = "airquality[1:3,]", 
     label = structure("airquality[1:3,]", html = TRUE, class = c("html", 
     "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
-"tutorial_quiz_answer")), structure(list(id = "lnr_ans_d40ac0e", 
+"tutorial_quiz_answer")), structure(list(id = "lnr_ans_a57b9af", 
     option = "airquality[,1:3]", value = "airquality[,1:3]", 
     label = structure("airquality[,1:3]", html = TRUE, class = c("html", 
     "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
@@ -922,7 +922,7 @@ learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label 
 "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
 "character")), message = NULL, post_message = NULL), ids = list(
     answer = "question2-answer", question = "question2"), loading = NULL, 
-    random_answer_order = TRUE, allow_retry = TRUE, seed = 216113429.899364, 
+    random_answer_order = TRUE, allow_retry = TRUE, seed = 859426171.599799, 
     options = list()), class = c("learnr_radio", "tutorial_question"
 )), session = session)
 </script>
@@ -1101,18 +1101,18 @@ learnr:::store_exercise_cache(structure(list(label = "q6", global_setup = struct
  
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "question7", question = structure("Select the correct way to check the number of observations you had after the last subsetting operation, i.e. in question 3.", html = TRUE, class = c("html", 
-"character")), answers = list(structure(list(id = "lnr_ans_f69fba5", 
+"character")), answers = list(structure(list(id = "lnr_ans_774fc0c", 
     option = "length(airquality$Month==6 & airquality$Temp <=80)", 
     value = "length(airquality$Month==6 & airquality$Temp <=80)", 
     label = structure("length(airquality$Month==6 &amp; airquality$Temp &lt;=80)", html = TRUE, class = c("html", 
     "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
-"tutorial_quiz_answer")), structure(list(id = "lnr_ans_ff48ec3", 
+"tutorial_quiz_answer")), structure(list(id = "lnr_ans_3eadc71", 
     option = "length(airquality$Wind[airquality$Month==6 & airquality$Temp <=80])", 
     value = "length(airquality$Wind[airquality$Month==6 & airquality$Temp <=80])", 
     label = structure("length(airquality$Wind[airquality$Month==6 &amp; airquality$Temp &lt;=80])", html = TRUE, class = c("html", 
     "character")), correct = TRUE, message = structure("Good job!", html = TRUE, class = c("html", 
     "character")), type = "literal"), class = c("tutorial_question_answer", 
-"tutorial_quiz_answer")), structure(list(id = "lnr_ans_840bac6", 
+"tutorial_quiz_answer")), structure(list(id = "lnr_ans_c1b0a4f", 
     option = "length(airquality$Wind[airquality$Month=6 & Temp <=80])", 
     value = "length(airquality$Wind[airquality$Month=6 & Temp <=80])", 
     label = structure("length(airquality$Wind[airquality$Month=6 &amp; Temp &lt;=80])", html = TRUE, class = c("html", 
@@ -1124,7 +1124,7 @@ learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label 
 "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
 "character")), message = NULL, post_message = NULL), ids = list(
     answer = "question7-answer", question = "question7"), loading = NULL, 
-    random_answer_order = TRUE, allow_retry = TRUE, seed = 180091620.416138, 
+    random_answer_order = TRUE, allow_retry = TRUE, seed = 772098135.640464, 
     options = list()), class = c("learnr_radio", "tutorial_question"
 )), session = session)
 </script>
@@ -1142,8 +1142,8 @@ learnr:::store_exercise_cache(structure(list(label = "submission", global_setup 
 "library(learnr)", "library(gradethis)", "library(readxl)", "library(xlsx)", 
 "library(datasets)", "knitr::opts_chunk$set(echo = FALSE)", "knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)", 
 "learnr::tutorial_options(", "  exercise.timelimit = 60)"), chunk_opts = list(
-    label = "setup", include = FALSE)), setup = "submission_code <- function(UID){\n  httr::sha1_hash('R-functions',as.character(UID))\n}", 
-    chunks = list(list(label = "submission-setup", code = "submission_code <- function(UID){\n  httr::sha1_hash('R-functions',as.character(UID))\n}", 
+    label = "setup", include = FALSE)), setup = "submission_code <- function(UID){\n  httr::sha1_hash('R-subsetting',as.character(UID))\n}", 
+    chunks = list(list(label = "submission-setup", code = "submission_code <- function(UID){\n  httr::sha1_hash('R-subsetting',as.character(UID))\n}", 
         opts = list(label = "\"submission-setup\""), engine = "r"), 
         list(label = "submission", code = "# Replace the number below with your UID\nsubmission_code(2)", 
             opts = list(label = "\"submission\"", exercise = "TRUE"), 
@@ -1194,7 +1194,7 @@ learnr:::store_exercise_cache(structure(list(label = "submission", global_setup 
 
 <!-- begin doc-metadata -->
 <div id="doc-metadata">
-<h1 class="title toc-ignore" style="display:none;">Data sets in R</h1>
+<h1 class="title toc-ignore" style="display:none;">Subsetting in R</h1>
 </div>
 <!-- end doc-metadata -->
 

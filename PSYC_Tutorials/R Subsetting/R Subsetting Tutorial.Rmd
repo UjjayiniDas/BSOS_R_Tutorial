@@ -1,11 +1,11 @@
 ---
-title: "Data sets in R"
+title: "Subsetting in R"
 output: 
   learnr::tutorial:
     progressive: true
 runtime: shiny_prerendered
 tutorial:
-  id: "R-vectors"
+  id: "R-subsetting"
   version: 0.5
 ---
 
@@ -511,7 +511,7 @@ learnr::question("Select the correct way to check the number of observations you
 
 ```{r submission-setup}
 submission_code <- function(UID){
-  httr::sha1_hash('R-functions',as.character(UID))
+  httr::sha1_hash('R-subsetting',as.character(UID))
 }
 ```
 
