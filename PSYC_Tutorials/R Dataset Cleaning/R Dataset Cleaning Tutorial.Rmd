@@ -1,0 +1,395 @@
+---
+title: "Data Cleaning in R"
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+tutorial:
+  id: "R-data-cleaning"
+  version: 0.5
+---
+
+```{r setup, include=FALSE}
+library(MASS)
+library(learnr)
+library(gradethis)
+library(readxl)
+library(xlsx)
+library(datasets)
+library(psych)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+learnr::tutorial_options(
+  exercise.timelimit = 60)
+```
+
+## Overview
+
+This tutorial mainly focuses on an overall summary of what you learnt so far and give you a brief idea about how to handle missing observations in your data. Let's begin!
+
+## Review of Earlier Lessons
+
+- We will start by first opening the XLSX file in the dataset. 
+- Remember to create a original file and a working file.
+- Remember to load the package `readxl` in your local environment before reading a .xlsx file.
+
+```{r}
+data.original1 <- read_xlsx("D:/BSOS_R_Tutorial/PSYC_Tutorials/data_psych/STAT200_Data_Update_4.8_original.xlsx")
+data.working <- data.original1
+```
+
+
+## Structure & Summary of Dataset
+
+```{r}
+#str() allows us to see the structure of the variables in the dataset
+str(data.working)
+
+#summary provides us with a summary of the variables in the dataset
+summary(data.working)
+```
+
+## Describe / Describe.By() Datasets
+
+
+### install/library
+
+- We first begin with the regular install/library process
+- Note if you have it already installed in the computer, you do not need to install the package
+
+```{r}
+#install.packages(psych)
+#library(psych)
+```
+
+### describe()
+
+```{r}
+#describe() also provides us a clean summary/information on the variables in the dataset
+describe(data.working)
+  #describe(dataset)
+```
+
+*Note: You can find more on `describe` function [here](https://www.rdocumentation.org/packages/psych/versions/2.0.12/topics/describe)*.
+
+### describe.by()
+
+```{r}
+#describe.by() provides us a clean summary/information on the variables in the dataset FOR A SPECIFIC GROUP
+
+#Preparing the Data into Factors
+
+#Original Dataset Structure
+str(data.original1)
+
+#Converting Stat Anxiety from Numeric to Factors
+data.working$Stat.Anxiety_Name <- as.factor(data.working$Stat.Anxiety_Name)
+  #Low Anxiety
+  #Medium Anxiety
+  #High Anxiety
+
+#Observing Change from Numeric to Factor
+str(data.working)
+
+#Running the Code
+describe.by(data.working, data.working$Stat.Anxiety_Name)
+  #describe(dataset, dataset$group)
+```
+
+*Note: For more information on `describe.by()`, refer to this [link](https://www.rdocumentation.org/packages/psych/versions/2.0.12/topics/describeBy)*.
+
+
+## Review of Subsetting in R
+
+In this section, we quickly review some of the things about subsetting that you learnt in the last tutorial.
+
+### Selecting specific Variables in the Dataset
+
+```{r}
+#This is how to Extract a specific variable via $
+data.working$Sleep
+data.working$Motivation
+  #dataset$variable
+
+#This is how to Extract a specific variables via []
+data.working[,2]
+data.working[,3]
+data.working[,2:3]
+  #dataset[row,column]
+
+#This is how to Extract a specific row via []
+data.working[1,]
+data.working[3,]
+data.working[1:3,]
+
+#This is how to Extract a specific variable and row via []
+data.working[1,1] #row 1 and column 1
+data.working[1:3, 1:3] #row 1 to 3 & column 1 to 3
+```
+
+Next, we look at exam scores by each factor of Statistics Anxiety by directly referencing variables we are interested in using [ ] and logical operators.
+
+### Factors
+
+- Here we subset for Factors.
+
+```{r}
+#Exam Scores for Students with Low Stat Anxiety (Stat Anxiety == 1)
+data.working$Scores[data.working$Stat.Anxiety  == 1]
+
+#Exam Scores for Students with High Stat Anxiety (Stat Anxiety == 3)
+data.working$Scores[data.working$Stat.Anxiety == 3]
+```
+
+### Numeric
+
+- Here we subset for numerical information.
+
+```{r}
+#Exam Scores for Students with Motivation Equal to 5
+data.working$Scores[data.working$Motivation  == 5]
+
+#Exam Scores for Students with Motivation Greater than 5
+data.working$Scores[data.working$Motivation > 5]
+
+#Exam Scores for Students with Motivation Less than 5
+data.working$Scores[data.working$Motivation < 5]
+```
+
+
+### AND Logical Operator &
+
+```{r}
+#Exam Scores for Statistics Anxiety Low (1) & Motivation Greater than 5
+data.working$Scores[data.working$Stat.Anxiety == 1 & data.working$Motivation > 5]
+
+data.working$Scores[data.working$Stat.Anxiety == 1 & data.working$Sleep > 300]
+
+
+#Exam Scores for Statistics Anxiety High (3) & Motivation Less than or Equal to 5
+data.working$Scores[data.working$Stat.Anxiety == 3 & data.working$Motivation <= 5]
+```
+
+## Cleaning Datasets
+
+Now we move towards something new and interesting, which is data cleaning using R!
+Much of work in RStudio and data analysis involves processing datasets. This is not the glamorous part of statistical analysis but it makes up more than 75% of the job itself. In this section, we will discuss three popular methods for data cleaning.
+
+First, let's check the Total Sample Size of Dataset.
+
+```{r}
+#Sample Size Original/Working Datasets
+nrow(data.original1)
+nrow(data.working)
+
+#N = 90 as we have 90 participants in total
+```
+
+Now, lets reference the variables that have missing data to them. Here when we reference the missing_data variable, we can see that we are missing some values below.
+
+```{r}
+data.working$Stat.Anxiety
+data.working$Stat.Anxiety.Missing
+
+#Note: The Missing Data is referenced as NA
+```
+
+**The missing data is very common and may be due to:**
+    
+- Participant Fatigue
+- Privacy Concerns
+- Connectivity Issues
+   
+
+For data analysis, the easiest way to address missing values consist of three methods:
+
+- Listwise Deletion
+- Casewise Deletion
+- Mean/Median Imputation
+
+Now, we will discuss these three methods.
+
+## Listwise Deletion
+
+- This method refers to deleting all rows in the dataset that contain at least one missing data value in all of the variables.
+- `na.omit()` can be used to limit data to only rows with data for all variables.
+- One Problem with this method is that it can eliminate a lot of data.
+
+```{r}
+data.listwise.deletion <- na.omit(data.working)
+data.listwise.deletion #Notice the Missing_Data Column
+
+#Compare Listwise & Working
+head(data.original1$Stat.Anxiety.Missing)
+head(data.listwise.deletion$Stat.Anxiety.Missing)
+
+nrow(data.original1) #N = 90
+nrow(data.listwise.deletion) #N = 67
+```
+
+## Casewise Deletion
+
+- This method refers to just ignoring the data for a certain type of analysis when it is missing.
+- R requires us to do this for many analyses by ignoring the data that is missing a value; but also does it automatically for some analyses by ignoring the data that is missing a value.
+    
+### Example where R Does not do it Automatically
+
+- To specify casewise deletion manually, you can input a `na.rm = TRUE` within the function itself.
+
+```{r}
+#R Does not Work
+mean(data.working$Stat.Anxiety.Missing)
+median(data.working$Stat.Anxiety.Missing)
+
+#R Works when we do it Manually
+mean(data.working$Stat.Anxiety.Missing, na.rm = TRUE)
+median(data.working$Stat.Anxiety.Missing, na.rm = TRUE)
+```
+
+### Example where R Does it Automatically
+
+- However, sometimes R functions do casewise deletion automatically!
+- The `cor.test()` function does this!
+- Unfortunately, we have to check each function to see how it treats missing data. 
+
+### Example where R does Casewise Deletion Automatically
+
+```{r}
+#Correlation between Statistics Anxiety (Missing) & Exam Scores
+cor.test(data.working$Stat.Anxiety.Missing, data.working$Scores)
+```
+
+## Median/Mean Imputation
+
+- This method refers to filling in the missing data values with the mean or median of said variable.
+- For instance if the mean is 5 for motivation variable, we would fill in all of the `NA`s for motivation variable with 5's.
+- The benefits of mean/median imputation is that it allows us to have more data to use for our analyses.
+- The major downside is that it reduces our variability in the dataset.
+
+    
+### Preparing Data for Mean/Median Imputation
+
+```{r}
+#Create a Copy for Mean/Median Imputation
+mean_impute <- data.working
+median_impute <- data.working
+
+#Calculate Mean/Median for Stat Anxiety
+mean(mean_impute$Stat.Anxiety.Missing, na.rm = TRUE)
+median(mean_impute$Stat.Anxiety.Missing, na.rm = TRUE)
+```
+
+### Doing Mean Imputation
+
+- The general format of writing the code is:
+
+"`r #Name_of_Dataset$Variable_to_Reference[is.na(#name_of_Dataset$Variable_to_Reference)] <- Value_to_Replace_MissingData`"
+
+```{r}
+#Mean Imputation
+mean_impute$Stat.Anxiety.Missing[is.na(mean_impute$Stat.Anxiety.Missing)] <- 1.9868642
+
+#Observing Change
+mean_impute$Stat.Anxiety.Missing
+
+#Compare to Old
+data.working$Stat.Anxiety.Missing
+```
+
+*Note: Significant figures also now change since we added a bunch of figures when we added the mean (e.g., 1.9868642)!*
+
+### Doing Median Imputation
+
+- Same format as Mean Imputation, except now we just use 2 instead of 1.9868642 because the median of the observed data was 2.
+    
+```{r}
+#Median Imputation
+median_impute$Stat.Anxiety.Missing[is.na(median_impute$Stat.Anxiety.Missing)] <- 2
+
+#Observing Change
+median_impute$Stat.Anxiety.Missing
+
+#Compare to Old
+data.working$Stat.Anxiety.Missing
+```
+
+*Note: Significant figures do not change since we did not add extra figures after adding the median (e.g, 2)!*
+
+Time for some fun exercises!
+
+## Exercises
+
+###
+
+Consider the `airquality` data set here again.
+
+```{r echo=TRUE, eval=TRUE}
+data("airquality")
+```
+
+### Exercise 1
+
+How will you find the mean of `Ozone` concentration, given that you are supposed to delete any missing value for this variable?
+
+```{r exercise1, exercise=TRUE, echo=FALSE}
+```
+
+```{r exercise1-check, echo=FALSE}
+grade_result(
+  pass_if(~ identical(.result, mean(airquality$Ozone,na.rm = TRUE)), "Good Job!"),
+  fail_if(~ TRUE)
+)
+```
+
+### Exercise 2
+
+How would you impute the missing values for `Ozone` with their median?
+
+```{r exercise2, exercise=TRUE, echo=FALSE}
+```
+
+```{r exercise2-solution, echo=FALSE}
+airquality$Ozone[is.na(airquality$Ozone)] <- median(airquality$Ozone,na.rm = TRUE)
+```
+
+```{r exercise2-check, echo=FALSE}
+grade_code("Excellent")
+```
+
+###
+
+### Exercise 3
+
+How would you omit all rows containing missing values?
+
+```{r exercise3, exercise=TRUE, echo=FALSE}
+```
+
+```{r exercise3-check, echo=FALSE}
+grade_result(
+  pass_if(~ identical(.result, na.omit(airquality)), "Well done!"),
+  fail_if(~ TRUE)
+)
+```
+
+###
+
+### Submitting Work
+
+```{r submission-setup, echo=FALSE}
+submission_code <- function(UID){
+  httr::sha1_hash('data_cleaning',as.character(UID))
+}
+```
+
+Generate your submission code by putting in your UID in the function below. For example, if your UID is `2`, then your code should look like `submission_code(UID = 2)`
+
+```{r submission, exercise = TRUE, echo=FALSE}
+# Replace the number below with your UID
+submission_code(2)
+```
+
+##
+
+
+
