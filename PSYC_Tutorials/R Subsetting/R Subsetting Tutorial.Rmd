@@ -507,7 +507,7 @@ learnr::question("Select the correct way to check the number of observations you
 
 ###
 
-## Submitting Work
+### Submitting Work
 
 ```{r submission-setup}
 submission_code <- function(UID){
