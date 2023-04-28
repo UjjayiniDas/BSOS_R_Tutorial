@@ -51,13 +51,13 @@ RStudio is the most commonly used integrated development environment (IDE) for R
 
 ### Four Windows
 
-![Figure 1: The RStudio environment](../PSYC_Tutorials/images_folder/rstudio_env.jpg){#id .class width=700 height=445px}
+![Figure 1: The RStudio environment](D:/BSOS_R_Tutorial/PSYC_Tutorials/images_folder/rstudio_env.jpg){#id .class width=700 height=445px}
 
 ## What is a Code Block?
 
 Below is a picture of code block in R markdown.
 
-![Figure2: Code Block](../PSYC_Tutorials/images_folder/code_block.jpg)
+![Figure2: Code Block](D:/BSOS_R_Tutorial/PSYC_Tutorials/images_folder/code_block.jpg)
 
 
 - When you use a r-markdown file, you can write your code in a code block which is usually a grey space created inside the markdown file.
